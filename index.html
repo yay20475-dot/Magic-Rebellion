@@ -1,0 +1,3265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+
+<title>Magic Rebellion</title>
+
+<style>
+
+body{
+    margin:0;
+    overflow:hidden;
+    background:black;
+    touch-action:none;
+    font-family:sans-serif;
+}
+
+canvas{
+    display:block;
+    background:
+    radial-gradient(circle at center,
+    #1b1b35,
+    #050510 70%);
+}
+
+#select{
+
+    position:absolute;
+    inset:0;
+
+    background:
+    rgba(0,0,0,0.92);
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    color:white;
+    z-index:10;
+}
+
+.card{
+
+    width:260px;
+    padding:14px;
+    margin:10px;
+
+    border:2px solid white;
+    border-radius:14px;
+
+    text-align:center;
+
+    background:
+    rgba(255,255,255,0.06);
+}
+
+.selectedCard{
+
+    border:2px solid #66ff66;
+    box-shadow:
+    0 0 25px #66ff66;
+
+    background:
+    rgba(80,255,120,0.15);
+
+    transform:scale(1.05);
+}
+
+.chapterBtn{
+
+    width:140px;
+    padding:10px;
+
+    margin:6px;
+
+    border-radius:10px;
+    border:2px solid white;
+
+    background:
+    rgba(255,255,255,0.08);
+
+    color:white;
+
+    font-weight:bold;
+}
+
+.activeChapter{
+
+    border:2px solid #66ccff;
+
+    box-shadow:
+    0 0 20px #66ccff;
+
+    background:
+    rgba(80,180,255,0.2);
+}
+
+#startBtn{
+
+    margin-top:20px;
+
+    width:220px;
+    padding:14px;
+
+    border:none;
+    border-radius:14px;
+
+    background:
+    linear-gradient(
+        to right,
+        #33aa33,
+        #66ff66
+    );
+
+    color:white;
+
+    font-size:22px;
+    font-weight:bold;
+
+    display:none;
+
+    box-shadow:
+    0 0 25px #44ff44;
+}
+
+#ui{
+
+    position:absolute;
+    top:10px;
+    left:10px;
+
+    color:white;
+    z-index:5;
+
+    text-shadow:0 0 5px black;
+}
+
+.bar{
+
+    width:260px;
+    height:16px;
+
+    background:#222;
+
+    border-radius:8px;
+    overflow:hidden;
+
+    margin-bottom:8px;
+}
+
+.fill{
+    height:100%;
+}
+
+#hpFill{
+    background:#44ff88;
+}
+
+#bossFill{
+    background:
+    linear-gradient(to right,
+    #ff0044,
+    #ff88aa);
+}
+
+#skillBtn{
+
+    position:absolute;
+
+    right:25px;
+    bottom:25px;
+
+    width:90px;
+    height:90px;
+
+    border-radius:50%;
+
+    background:
+    rgba(100,120,255,0.5);
+
+    border:3px solid white;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:white;
+    font-weight:bold;
+    z-index:5;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="select">
+
+<h1>
+MAGIC REBELLION
+</h1>
+
+<div style="display:flex;align-items:center;gap:10px;">
+
+<button class="chapterBtn" onclick="prevChapter()">
+◀
+</button>
+
+<button class="chapterBtn activeChapter"
+onclick="selectChapter(selectedChapter)"
+id="chapterBtn">
+Chapter 1
+</button>
+
+<button class="chapterBtn" onclick="nextChapter()">
+▶
+</button>
+
+</div>
+
+<div style="display:flex;align-items:center;gap:10px;">
+
+<button class="chapterBtn"
+onclick="prevCharacter()">
+◀
+</button>
+
+<div class="card"
+id="characterCard"
+onclick="selectCharacter(selectedPreviewChar)">
+Astraea<br>
+The Strongest Dragon Creation Mage in the Universe
+</div>
+
+<button class="chapterBtn"
+onclick="nextCharacter()">
+▶
+</button>
+
+</div>
+
+<button id="startBtn"
+onclick="startGame()">
+START
+</button>
+
+</div>
+
+<div id="ui">
+
+HP
+<div class="bar">
+<div id="hpFill"
+class="fill"></div>
+</div>
+
+Boss HP - Name Boss: …
+<div class="bar">
+<div id="bossFill"
+class="fill"></div>
+</div>
+
+<div id="info"></div>
+
+</div>
+
+<div id="skillBtn">
+SKILL
+</div>
+
+<canvas id="game"></canvas>
+
+<script>
+
+const canvas =
+document.getElementById("game");
+
+const ctx =
+canvas.getContext("2d");
+
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+// =======================
+// BOSS IMAGE
+// =======================
+
+const chapter1BossImg =
+"https://i.ibb.co/BVWwW4zP/image.png";
+
+const chapter2BossImg =
+"https://i.ibb.co/LXKjH0qx/image.png";
+
+const chapter1Stage2Img =
+"https://i.ibb.co/xqMgd3T0/image.png";
+
+const chapter2Stage2Img =
+"https://i.ibb.co/MynNM602/image.png";
+
+const bossImg3 = new Image();
+bossImg3.src = chapter1Stage2Img;
+
+const bossImg4 = new Image();
+bossImg4.src = chapter2Stage2Img;
+
+const bossImg1 = new Image();
+bossImg1.src = chapter1BossImg;
+
+const bossImg2 = new Image();
+bossImg2.src = chapter2BossImg;
+
+const iceDragonImg = new Image();
+iceDragonImg.src = "https://i.ibb.co/Z6YSx6QM/image.png";
+
+const cryseliaImg = new Image();
+cryseliaImg.src = "https://i.ibb.co/TqKqn79d/image.png";
+
+const chapter4Stage1Img = new Image();
+chapter4Stage1Img.src = "https://i.ibb.co/nMQx7TrJ/image.png";
+
+const chapter4Stage2Img = new Image();
+chapter4Stage2Img.src = "https://i.ibb.co/HD4s9XmK/image.png";
+
+const charImgs=[];
+
+[
+"https://i.ibb.co/5XtYw8Sv/image.png",
+"https://i.ibb.co/G3THpj7n/image.png",
+"https://i.ibb.co/V0K4cVB6/image.png",
+"https://i.ibb.co/yFbcn9hs/image.png",
+"https://i.ibb.co/0jWJfsk3/image.png",
+"https://i.ibb.co/5XYzmjx8/image.png"
+]
+.forEach(src=>{
+
+    let img = new Image();
+
+    img.src = src;
+
+    charImgs.push(img);
+});
+
+const names = [
+
+"Astraea",
+"Florensya",
+"Lumina",
+"Velocity",
+"Seraphine",
+"Nerissa"
+
+];
+
+const descriptions = [
+
+"The Strongest Dragon Creation Mage in the Universe",
+
+"Nature Mage",
+
+"Light Mage",
+
+"Super Speed Mage",
+
+"Teacher Portal Mage",
+
+"Ocean Mage"
+
+];
+
+// =======================
+// THÊM BIẾN
+// =======================
+
+let hitFlash = 0;
+let trioBosses = [];
+let activeTrio = 0;
+let selectedPreviewChar = 0;
+let poisonQueue = [];
+let rainbowLaser = [];
+let paralyzeTimer = 0;
+let darkControl = 0;
+let stage = 1;
+let screenShake = 0;
+let selectedChar = -1;
+let selectedChapter = 1;
+const maxChapter = 4;
+let gameOver = false;
+let currentChar = 0;
+let gameStarted=false;
+let frame=0;
+let screenFlash=0;
+let bossFreeze=0;
+let fastMode=0;
+let skillCooldown=0;
+let currentElement="";
+let player={
+
+    x:canvas.width/2,
+    y:canvas.height-140,
+
+    hp:10,
+    maxHp:10,
+
+    invuln:0
+};
+
+let boss={
+    x:canvas.width/2,
+    y:140,
+    hp:25000,
+    maxHp:25000
+};
+
+let trioBoss =[];
+let clones=[];
+let enemyBullets=[];
+let playerBullets=[];
+let dragonFire=[];
+
+function updateCharacterCard(){
+
+    const card =
+    document.getElementById("characterCard");
+
+    card.innerHTML =
+    names[selectedPreviewChar] +
+    "<br>" +
+    descriptions[selectedPreviewChar];
+
+    card.classList.remove("selectedCard");
+
+    if(selectedChar === selectedPreviewChar){
+        card.classList.add("selectedCard");
+    }
+}
+
+function nextCharacter(){
+
+    selectedPreviewChar++;
+
+    if(selectedPreviewChar >= names.length){
+        selectedPreviewChar = 0;
+    }
+
+    updateCharacterCard();
+}
+
+function prevCharacter(){
+
+    selectedPreviewChar--;
+
+    if(selectedPreviewChar < 0){
+        selectedPreviewChar = names.length - 1;
+    }
+
+    updateCharacterCard();
+}
+
+// =======================
+// START GAME
+// =======================
+
+function startGame(){
+
+    if(selectedChar === -1)
+    return;
+
+    currentChar = selectedChar;
+    gameStarted = true;
+
+    enemyBullets = [];
+    clones = [];
+    stage = 1;
+
+    // =========================
+    // CHAPTER 1
+    // =========================
+    if(selectedChapter === 1){
+
+        boss.maxHp = 30000;
+        boss.hp = 30000;
+
+        document.querySelector("#ui").innerHTML = `
+HP
+<div class="bar">
+<div id="hpFill" class="fill"></div>
+</div>
+
+Boss HP - Name Boss: Glaciron
+<div class="bar">
+<div id="bossFill" class="fill"></div>
+</div>
+
+<div id="info"></div>
+`;
+    }
+
+    // =========================
+    // CHAPTER 2
+    // =========================
+    else if(selectedChapter === 2){
+
+        boss.maxHp = 17500;
+        boss.hp = 17500;
+
+        document.querySelector("#ui").innerHTML = `
+HP
+<div class="bar">
+<div id="hpFill" class="fill"></div>
+</div>
+
+Boss HP - Name Boss: Skorvax
+<div class="bar">
+<div id="bossFill" class="fill"></div>
+</div>
+
+<div id="info"></div>
+`;
+    }
+
+    // =========================
+    // CHAPTER 3
+    // =========================
+    else if(selectedChapter === 3){
+
+        boss.maxHp = 20000; // Ice Dragon
+        boss.hp = 20000;
+
+        document.querySelector("#ui").innerHTML = `
+HP
+<div class="bar">
+<div id="hpFill" class="fill"></div>
+</div>
+
+Boss HP - Name Boss: Ice Dragon
+<div class="bar">
+<div id="bossFill" class="fill"></div>
+</div>
+
+<div id="info"></div>
+`;
+    }
+
+else if(selectedChapter === 4){
+
+    boss.maxHp = 30000;
+    boss.hp = 30000;
+
+    document.querySelector("#ui").innerHTML = `
+HP
+<div class="bar">
+<div id="hpFill" class="fill"></div>
+</div>
+
+Boss HP - Hero Hunter Group
+<div class="bar">
+<div id="bossFill" class="fill"></div>
+</div>
+
+<div id="info"></div>
+`;
+}
+    document.getElementById("select").style.display = "none";
+    requestAnimationFrame(loop);
+}
+
+function selectCharacter(id){
+
+    selectedChar = id;
+
+    updateCharacterCard();
+
+    const btn =
+    document.getElementById("chapterBtn");
+
+if(
+    (id === 4 && selectedChapter !== 1) ||
+    (id === 5 && selectedChapter === 1)
+){
+
+        btn.style.opacity = "0.4";
+        btn.style.filter = "grayscale(1)";
+
+        document.getElementById("startBtn").style.display = "none";
+
+        return;
+    }
+
+    btn.style.opacity = "1";
+    btn.style.filter = "grayscale(0)";
+
+    document.getElementById("startBtn").style.display = "block";
+}
+
+function selectChapter(id){
+
+    selectedChapter = id;
+
+    const btn = document.getElementById("chapterBtn");
+
+    if(id === 1) btn.innerText = "Chapter 1";
+    if(id === 2) btn.innerText = "Chapter 2";
+    if(id === 3) btn.innerText = "Chapter 3";
+    if(id === 4) btn.innerText = "Chapter 4";
+    btn.classList.add("activeChapter");
+
+    // ===== KHÓA CHAPTER CHO SERAPHINE =====
+
+if(
+    (selectedChar === 4 && id !== 1) ||
+    (selectedChar === 5 && id === 1)
+){
+
+        btn.style.opacity = "0.4";
+        btn.style.filter = "grayscale(1)";
+
+        document.getElementById("startBtn").style.display = "none";
+    }
+
+    else{
+
+        btn.style.opacity = "1";
+        btn.style.filter = "grayscale(0)";
+
+        if(selectedChar !== -1){
+            document.getElementById("startBtn").style.display = "block";
+        }
+    }
+}
+
+class Bullet{
+
+    constructor(
+        x,y,
+        ang,
+        spd,
+        color,
+        r=5,
+        dmg=1
+    ){
+
+        this.x=x;
+        this.y=y;
+
+        this.vx=
+        Math.cos(ang)*spd;
+
+        this.vy=
+        Math.sin(ang)*spd;
+
+        this.color=color;
+
+        this.r=r;
+
+        this.dmg=dmg;
+    }
+
+    update(){
+
+        this.x+=this.vx;
+        this.y+=this.vy;
+    }
+
+    draw(){
+
+        ctx.shadowColor=
+        this.color;
+
+        ctx.shadowBlur=15;
+
+        ctx.fillStyle=
+        this.color;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            this.x,
+            this.y,
+            this.r,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+        ctx.shadowBlur=0;
+    }
+}
+
+function nextChapter(){
+    selectedChapter++;
+    if(selectedChapter > maxChapter) selectedChapter = 1;
+    selectChapter(selectedChapter);
+}
+
+function prevChapter(){
+    selectedChapter--;
+    if(selectedChapter < 1) selectedChapter = maxChapter;
+    selectChapter(selectedChapter);
+}
+
+// =======================
+// CHAPTER 1 PATTERN
+// =======================
+
+function spawnPatternChapter1(){
+
+    let cycle =
+    frame % 1200;
+
+    // =================
+    // PHASE 1
+    // ORB NỔ
+    // =================
+
+    if(cycle < 400){
+
+        if(frame % 120 === 0){
+
+            let ang =
+            Math.atan2(
+                player.y - boss.y,
+                player.x - boss.x
+            );
+
+            enemyBullets.push({
+
+                x: boss.x,
+                y: boss.y,
+
+                vx: Math.cos(ang) * 6,
+                vy: Math.sin(ang) * 6,
+
+                r: 45,
+                life: 100,
+
+                update(){
+
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    this.life--;
+
+                    if(this.life === 0){
+
+                        for(let i=0;i<18;i++){
+
+                            let b = new Bullet(
+                                this.x,
+                                this.y,
+                                i*Math.PI*2/18,
+                                6,
+                                "#99ddff",
+                                10,
+                                1
+                            );
+
+                            b.life = 60;
+
+                            b.update = function(){
+
+                                this.x += this.vx;
+                                this.y += this.vy;
+
+                                this.life--;
+
+                                if(this.life <= 0){
+                                    this.dead = true;
+                                }
+                            };
+
+                            enemyBullets.push(b);
+                        }
+
+                        screenShake = 25;
+                    }
+
+                    if(this.life <= -10){
+                        this.dead = true;
+                    }
+                },
+
+                draw(){
+
+                    ctx.fillStyle =
+                    "#bfefff";
+
+                    ctx.shadowColor =
+                    "#ccffff";
+
+                    ctx.shadowBlur = 25;
+
+                    ctx.beginPath();
+
+                    ctx.arc(
+                        this.x,
+                        this.y,
+                        this.r,
+                        0,
+                        Math.PI*2
+                    );
+
+                    ctx.fill();
+
+                    ctx.shadowBlur = 0;
+                }
+            });
+        }
+    }
+
+    // =================
+    // PHASE 2
+    // ICE PILLAR
+    // =================
+
+    else if(cycle < 800){
+
+        if(frame % 100 === 0){
+
+            let x =
+            player.x +
+            (Math.random()-0.5)*180;
+
+            enemyBullets.push({
+
+                x:x,
+                y:-120,
+
+                w:80,
+                h:220,
+
+                vy:10,
+
+                update(){
+
+                    this.y += this.vy;
+
+                    if(this.y > canvas.height-220){
+                        screenShake = 15;
+                    }
+                },
+
+                draw(){
+
+                    ctx.fillStyle =
+                    "#88e6ff";
+
+                    ctx.shadowColor =
+                    "#aaffff";
+
+                    ctx.shadowBlur = 20;
+
+                    ctx.fillRect(
+                        this.x-this.w/2,
+                        this.y,
+                        this.w,
+                        this.h
+                    );
+
+                    ctx.shadowBlur = 0;
+                }
+            });
+        }
+    }
+
+    // =================
+    // PHASE 3
+    // ICE WAVE
+    // =================
+
+    else{
+
+        if(frame % 200 === 0){
+
+            screenShake = 40;
+
+            for(let i=0;i<30;i++){
+
+                enemyBullets.push(
+
+                    new Bullet(
+                        boss.x,
+                        boss.y + 60,
+
+                        Math.PI +
+                        (i-15)*0.2,
+
+                        8,
+
+                        "#d9ffff",
+
+                        12,
+                        1
+                    )
+                );
+            }
+        }
+    }
+}
+
+// =======================
+// VIRELTHA PATTERN
+// =======================
+
+function spawnPatternVireltha(){
+
+    let cycle =
+    frame % 1000;
+
+    // =================
+    // ĐỘC TÍM
+    // =================
+
+    if(cycle < 350){
+
+        if(frame % 45 === 0){
+
+            for(let i=0;i<16;i++){
+
+                let ang =
+                i*Math.PI*2/16;
+
+                let b =
+                new Bullet(
+                    boss.x,
+                    boss.y,
+                    ang,
+                    3,
+                    "#bb44ff",
+                    11,
+                    1
+                );
+
+                b.poison = true;
+
+                enemyBullets.push(b);
+            }
+        }
+    }
+
+    // =================
+    // TIA XANH LÁ
+    // =================
+
+else if(cycle < 700){
+
+    if(frame%20===0){
+
+        let x=
+        Math.random()*canvas.width;
+
+        enemyBullets.push({
+
+            x:x,
+            y:-100,
+
+            w:22,
+            h:160,
+
+            vy:10,
+
+            paralyze:true,
+
+            update(){
+                this.y+=this.vy;
+            },
+
+            draw(){
+
+                ctx.shadowColor =
+                "#00ff88";
+
+                ctx.shadowBlur = 20;
+
+                ctx.fillStyle =
+                "rgba(0,255,120,0.8)";
+
+                ctx.fillRect(
+                    this.x-this.w/2,
+                    this.y,
+                    this.w,
+                    this.h
+                );
+
+                ctx.shadowBlur = 0;
+            }
+        });
+
+    }
+}
+
+    // =================
+    // SÓNG TÊ LIỆT
+    // =================
+
+    else{
+
+        if(frame % 30 === 0){
+
+            for(let i=0;i<28;i++){
+
+                let ang =
+                i*Math.PI*2/28;
+
+                let b =
+                new Bullet(
+                    boss.x,
+                    boss.y,
+                    ang,
+                    5,
+                    "#66ff99",
+                    8,
+                    1
+                );
+
+                b.paralyze = true;
+
+                enemyBullets.push(b);
+            }
+        }
+    }
+}
+
+// =======================
+// NYXARA PATTERN
+// =======================
+
+function spawnPatternNyxara(){
+
+    let cycle =
+    frame % 1100;
+
+    // =================
+    // DARK RAIN
+    // =================
+
+    if(cycle < 350){
+
+        if(frame % 10 === 0){
+
+            let b =
+            new Bullet(
+                Math.random()*canvas.width,
+                -20,
+                Math.PI/2,
+                7,
+                "#111111",
+                9,
+                1
+            );
+
+            b.dark = true;
+
+            enemyBullets.push(b);
+        }
+    }
+
+    // =================
+    // HỐ BÓNG TỐI
+    // =================
+
+else if(cycle < 700){
+
+    if(frame % 120 === 0){
+
+        enemyBullets.push({
+
+            x: player.x,
+            y: player.y,
+
+            r: 25,
+
+            life: 180,
+
+            // delay 1 giây
+            delay: 60,
+
+            active: false,
+
+            update(){
+
+                // đếm delay trước
+                if(this.delay > 0){
+
+                    this.delay--;
+
+                    // hiệu ứng cảnh báo
+                    this.r += 0.15;
+
+                    if(this.delay <= 0){
+                        this.active = true;
+                    }
+
+                    return;
+                }
+
+                this.life--;
+
+                this.r += 1;
+
+                if(this.life <= 0){
+                    this.dead = true;
+                }
+            },
+
+            draw(){
+
+                // WARNING trước khi xuất hiện
+                if(!this.active){
+
+                    ctx.strokeStyle =
+                    "rgba(170,100,255,0.9)";
+
+                    ctx.lineWidth = 4;
+
+                    ctx.shadowColor =
+                    "#aa66ff";
+
+                    ctx.shadowBlur = 20;
+
+                    ctx.beginPath();
+
+                    ctx.arc(
+                        this.x,
+                        this.y,
+                        this.r,
+                        0,
+                        Math.PI*2
+                    );
+
+                    ctx.stroke();
+
+                    ctx.shadowBlur = 0;
+
+                    return;
+                }
+
+                // hố thật sự
+                ctx.fillStyle =
+                "rgba(0,0,0,0.75)";
+
+                ctx.shadowColor =
+                "#5522aa";
+
+                ctx.shadowBlur = 35;
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    this.x,
+                    this.y,
+                    this.r,
+                    0,
+                    Math.PI*2
+                );
+
+                ctx.fill();
+
+                ctx.shadowBlur = 0;
+            }
+        });
+    }
+}
+
+    // =================
+    // MẤT KIỂM SOÁT
+    // =================
+
+    else{
+
+        darkControl = 30;
+
+        if(frame % 55 === 0){
+
+            for(let i=0;i<12;i++){
+
+                enemyBullets.push(
+
+                    new Bullet(
+                        boss.x,
+                        boss.y,
+                        i*Math.PI*2/12,
+                        6,
+                        "#442266",
+                        12,
+                        1
+                    )
+                );
+            }
+        }
+    }
+}
+
+function spawnIceDragonPattern(){
+
+    let cycle = frame % 900;
+
+    // PHUN BĂNG
+    if(cycle < 450){
+
+        if(frame % 20 === 0){
+
+            let ang = Math.atan2(player.y - boss.y, player.x - boss.x);
+
+            for(let i = -2; i <= 2; i++){
+
+                enemyBullets.push(
+                    new Bullet(
+                        boss.x,
+                        boss.y,
+                        ang + i * 0.1,
+                        8,
+                        "#99ddff",
+                        10,
+                        1
+                    )
+                );
+            }
+        }
+    }
+
+    // QUẬT BĂNG
+    else{
+
+        if(frame % 60 === 0){
+
+            for(let i = 0; i < 14; i++){
+
+                enemyBullets.push(
+                    new Bullet(
+                        boss.x,
+                        boss.y,
+                        i * Math.PI * 2 / 14,
+                        6,
+                        "#ccf2ff",
+                        12,
+                        1
+                    )
+                );
+            }
+
+            screenShake = 20;
+        }
+    }
+}
+
+function spawnCryseliaPattern(){
+
+    let cycle = frame % 1100;
+
+    // ĐÓNG BĂNG TẦM XA
+    if(cycle < 400){
+
+        if(frame % 30 === 0){
+
+            let x = player.x + (Math.random() - 0.5) * 200;
+
+            enemyBullets.push({
+                x: x,
+                y: -100,
+                w: 70,
+                h: 200,
+                vy: 9,
+                freeze: true,
+
+                update(){
+                    this.y += this.vy;
+                },
+
+                draw(){
+                    ctx.fillStyle = "#66ccff";
+                    ctx.shadowColor = "#aaddff";
+                    ctx.shadowBlur = 25;
+
+                    ctx.fillRect(
+                        this.x - this.w/2,
+                        this.y,
+                        this.w,
+                        this.h
+                    );
+
+                    ctx.shadowBlur = 0;
+                }
+            });
+        }
+    }
+
+    // TINH THỂ BĂNG XOÁY
+    else if(cycle < 800){
+
+        if(frame % 25 === 0){
+
+            for(let i = 0; i < 18; i++){
+
+                enemyBullets.push(
+                    new Bullet(
+                        boss.x,
+                        boss.y,
+                        i * Math.PI * 2 / 18 + frame * 0.01,
+                        5,
+                        "#aaffff",
+                        8,
+                        1
+                    )
+                );
+            }
+        }
+    }
+
+    // ULTIMATE: BĂNG DIỆN RỘNG
+    else{
+
+        if(frame % 120 === 0){
+
+            screenFlash = 40;
+            screenShake = 35;
+
+            for(let i = 0; i < 40; i++){
+
+let b = new Bullet(
+    boss.x,
+    boss.y,
+    i * Math.PI * 2 / 40,
+    7,
+    "#e6ffff",
+    14,
+    9
+);
+
+b.freeze = true;
+enemyBullets.push(b);
+
+            }
+        }
+    }
+}
+
+function spawnHeroHunterTrio(){
+
+let cycle = frame % (boss.hp <= 5000 ? 1200 : 800);
+
+// boss đang tấn công
+let hunters = [boss, ...trioBoss];
+
+let shooter =
+hunters[
+    Math.floor(frame / 180) % hunters.length
+];
+
+// =====================
+// PHASE 1: CROSS FIRE
+// =====================
+if(cycle < 400){
+
+    if(frame % 28 === 0){
+
+        let ang =
+        Math.atan2(
+            player.y - shooter.y,
+            player.x - shooter.x
+        );
+
+        for(let i=-2;i<=2;i++){
+
+            enemyBullets.push(
+                new Bullet(
+                    shooter.x,
+                    shooter.y,
+                    ang + i*0.05,
+                    7,
+                    "#ff4444",
+                    7,
+                    1
+                )
+            );
+        }
+    }
+
+    if(frame % 150 === 0){
+
+        let side = Math.floor(Math.random()*4);
+
+        if(side === 0){
+
+            for(let i=0;i<8;i++){
+
+                enemyBullets.push(
+                    new Bullet(
+                        -20,
+                        i*(canvas.height/8),
+                        0,
+                        3,
+                        "#ffffff",
+                        6,
+                        1
+                    )
+                );
+            }
+        }
+
+        if(side === 1){
+
+            for(let i=0;i<8;i++){
+
+                enemyBullets.push(
+                    new Bullet(
+                        canvas.width+20,
+                        i*(canvas.height/8),
+                        Math.PI,
+                        3,
+                        "#ffffff",
+                        6,
+                        1
+                    )
+                );
+            }
+        }
+
+        if(side === 2){
+
+            for(let i=0;i<10;i++){
+
+                enemyBullets.push(
+                    new Bullet(
+                        i*(canvas.width/10),
+                        -20,
+                        Math.PI/2,
+                        3,
+                        "#ffffff",
+                        6,
+                        1
+                    )
+                );
+            }
+        }
+
+        if(side === 3){
+
+            for(let i=0;i<10;i++){
+
+                enemyBullets.push(
+                    new Bullet(
+                        i*(canvas.width/10),
+                        canvas.height+20,
+                        -Math.PI/2,
+                        3,
+                        "#ffffff",
+                        6,
+                        1
+                    )
+                );
+            }
+        }
+    }
+}
+
+// =====================
+// PHASE 2: HUNTER RAIN
+// =====================
+else if(cycle < 800){
+
+    if(frame % 14 === 0){
+
+        let ang =
+        Math.atan2(
+            player.y - shooter.y,
+            player.x - shooter.x
+        );
+
+        enemyBullets.push(
+            new Bullet(
+                shooter.x,
+                shooter.y,
+                ang,
+                6,
+                "#ffaa33",
+                5,
+                1
+            )
+        );
+    }
+
+    if(frame % 70 === 0){
+
+        for(let i=0;i<14;i++){
+
+            enemyBullets.push(
+                new Bullet(
+                    Math.random()*canvas.width,
+                    -20,
+                    Math.PI/2 +
+                    (Math.random()-0.5)*0.4,
+                    5 + Math.random()*3,
+                    "#66ccff",
+                    8,
+                    1
+                )
+            );
+        }
+    }
+}
+
+// =====================
+// PHASE 3: EXECUTION
+// =====================
+else if(boss.hp <= 5000){
+
+    if(frame % 45 === 0){
+
+        for(let i=0;i<24;i++){
+
+            let ang =
+            i*Math.PI*2/24;
+
+            let spd =
+            3 + (i%2)*2;
+
+            enemyBullets.push(
+                new Bullet(
+                    shooter.x,
+                    shooter.y,
+                    ang,
+                    spd,
+                    "#ff2222",
+                    8,
+                    2
+                )
+            );
+        }
+
+        screenShake = 12;
+    }
+
+    if(frame % 90 === 0){
+
+        let ang =
+        Math.atan2(
+            player.y - shooter.y,
+            player.x - shooter.x
+        );
+
+        for(let i=-4;i<=4;i++){
+
+            enemyBullets.push(
+                new Bullet(
+                    shooter.x,
+                    shooter.y,
+                    ang + i*0.08,
+                    11,
+                    "#ffffff",
+                    10,
+                    2
+                )
+            );
+        }
+    }
+}
+
+if(boss.hp < 30000 && trioBoss.length === 0){
+
+    trioBoss.push(
+        {x:220,y:180},
+        {x:canvas.width-220,y:180},
+        {x:canvas.width/2,y:260}
+    );
+}
+}
+
+function spawnThalvorn(){
+
+    let cycle = frame % 1200;
+
+    // =====================
+    // PHASE 1 - GLITCH SHOT
+    // =====================
+    if(cycle < 400){
+
+        if(frame % 5 === 0){
+
+            let x = Math.random()*canvas.width;
+
+            enemyBullets.push({
+                x:x,
+                y:-100,
+                w:20,
+                h:140,
+                vy:10,
+
+                update(){
+                    this.y += this.vy;
+                    this.x += Math.sin(this.y*0.05)*3;
+                },
+
+                draw(){
+                    ctx.fillStyle="#aa00ff";
+                    ctx.shadowBlur=25;
+                    ctx.fillRect(this.x,this.y,this.w,this.h);
+                    ctx.shadowBlur=0;
+                }
+            });
+        }
+    }
+
+    // =====================
+    // PHASE 2 - FRACTURE BULLETS
+    // =====================
+    else if(cycle < 800){
+
+        if(frame % 60 === 0){
+
+            let ang = Math.atan2(player.y-boss.y, player.x-boss.x);
+
+            let main = new Bullet(
+                boss.x,
+                boss.y,
+                ang,
+                7,
+                "#ff00ff",
+                10,
+                2
+            );
+
+            main.timer = 40;
+
+            main.update = function(){
+
+                this.x += this.vx;
+                this.y += this.vy;
+
+                this.timer--;
+
+                if(this.timer <= 0){
+
+                    for(let i=0;i<12;i++){
+
+                        enemyBullets.push(
+                            new Bullet(
+                                this.x,
+                                this.y,
+                                i*Math.PI*2/12,
+                                6,
+                                "#ffffff",
+                                6,
+                                1
+                            )
+                        );
+                    }
+
+                    this.dead = true;
+                }
+            };
+
+            enemyBullets.push(main);
+        }
+    }
+
+    // =====================
+    // PHASE 3 - REALITY BREAK
+    // =====================
+    else if(cycle < 1000){
+
+        if(frame % 40 === 0){
+
+            boss.x = canvas.width/2 + (Math.random()-0.5)*300;
+
+            for(let i=0;i<30;i++){
+
+                enemyBullets.push(
+                    new Bullet(
+                        boss.x,
+                        boss.y,
+                        i*Math.PI*2/30,
+                        5 + Math.random()*2,
+                        "#00ffff",
+                        8,
+                        2
+                    )
+                );
+            }
+
+            screenShake = 20;
+        }
+    }
+
+    // =====================
+    // PHASE 4 - REWIND ORBIT
+    // =====================
+    else if(cycle < 1100){
+
+        if(frame % 12 === 0){
+
+            let count = 14;
+
+            for(let i=0;i<count;i++){
+
+                let ang = (i * Math.PI*2/count) + frame*0.03;
+                let r = 120;
+
+                let b = new Bullet(
+                    boss.x + Math.cos(ang)*r,
+                    boss.y + Math.sin(ang)*r,
+                    ang + Math.PI,
+                    3,
+                    "#ff66ff",
+                    7,
+                    1
+                );
+
+                b.centerX = boss.x;
+                b.centerY = boss.y;
+
+                b.update = function(){
+
+                    let dx = this.x - this.centerX;
+                    let dy = this.y - this.centerY;
+
+                    let ang = Math.atan2(dy, dx) + 0.06;
+                    let dist = Math.hypot(dx, dy);
+
+                    this.x = this.centerX + Math.cos(ang) * dist;
+                    this.y = this.centerY + Math.sin(ang) * dist;
+
+                    let pa = Math.atan2(player.y - this.y, player.x - this.x);
+
+                    this.x += Math.cos(pa) * 0.4;
+                    this.y += Math.sin(pa) * 0.4;
+                };
+
+                enemyBullets.push(b);
+            }
+
+            screenShake = 10;
+        }
+    }
+
+    // =====================
+    // PHASE 5 - CORE BREAK
+    // =====================
+    else{
+
+        if(frame % 28 === 0){
+
+            boss.x = canvas.width/2 + (Math.random()-0.5)*380;
+            boss.y = 120 + (Math.random()-0.5)*80;
+
+            for(let i=0;i<36;i++){
+
+                let ang = i * Math.PI*2/36;
+                let spd = 3 + Math.random()*4;
+
+                let b = new Bullet(
+                    boss.x,
+                    boss.y,
+                    ang,
+                    spd,
+                    "#ffffff",
+                    6,
+                    2
+                );
+
+                b.update = function(){
+
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    this.vx += Math.sin(frame*0.02)*0.02;
+                    this.vy += Math.cos(frame*0.02)*0.02;
+                };
+
+                enemyBullets.push(b);
+            }
+
+            for(let i=0;i<12;i++){
+
+                enemyBullets.push(
+                    new Bullet(
+                        boss.x,
+                        boss.y,
+                        i*Math.PI*2/12,
+                        8,
+                        "#00ffff",
+                        10,
+                        3
+                    )
+                );
+            }
+
+            screenFlash = 20;
+            screenShake = 25;
+        }
+    }
+}
+
+// =======================
+// SPAWN PATTERN
+// =======================
+
+function spawnPattern(){
+
+    if(bossFreeze>0)
+    return;
+
+if(selectedChapter === 4 && stage === 1){
+    spawnHeroHunterTrio();
+    return;
+}
+
+if(selectedChapter === 4 && stage === 2){
+    spawnThalvorn();
+    return;
+}
+
+// CHAPTER 3
+if(selectedChapter === 3){
+
+    if(stage === 1){
+        spawnIceDragonPattern();
+    } 
+    else {
+        spawnCryseliaPattern();
+    }
+
+    return;
+}
+
+    // CHAPTER 1
+    if(selectedChapter === 1){
+
+        // STAGE 1
+        if(stage === 1){
+
+            spawnPatternChapter1();
+        }
+
+        // STAGE 2
+        else{
+
+            spawnPatternVireltha();
+        }
+
+        return;
+    }
+
+    // CHAPTER 2
+    if(selectedChapter === 2){
+
+        // STAGE 2
+        if(stage === 2){
+
+            spawnPatternNyxara();
+            return;
+        }
+    }
+
+    let cycle=
+    frame%1400;
+
+    let allBosses=
+    [boss,...clones];
+
+    if(cycle<350){
+
+        if(frame%40===0){
+
+let count = boss.hp>=10000&&boss.hp<=17500 ? 10 : 24;
+
+allBosses.forEach(b=>{
+
+    for(let i=0;i<count;i++){
+
+        enemyBullets.push(
+
+            new Bullet(
+                b.x,
+                b.y,
+                i*Math.PI*2/count,
+                2.5,
+                "#66ff99",
+                7
+            )
+        );
+    }
+});
+        }
+    }
+
+    else if(cycle<700){
+
+if(frame % (boss.hp >=10000&&boss.hp<=17500 ? 60 : 20) === 0){
+
+            allBosses.forEach(b=>{
+
+                let ang=
+                Math.atan2(
+                    player.y-b.y,
+                    player.x-b.x
+                );
+
+let shot = new Bullet(
+    b.x,
+    b.y,
+    ang+(Math.random()-0.5)*0.5,
+    7,
+    "#2f6b00",
+    8
+);
+
+shot.poison = true;
+
+enemyBullets.push(shot);
+
+            });
+        }
+    }
+
+    else if(cycle<1050){
+
+        if(frame%40===0){
+
+            let x=
+            Math.random()*canvas.width;
+
+            enemyBullets.push({
+
+                x:x,
+                y:-100,
+                w:22,
+                h:160,
+                vy:10,
+
+                update(){
+                    this.y+=this.vy;
+                },
+
+                draw(){
+                    ctx.fillStyle="rgba(255,0,0,0.8)";
+                    ctx.fillRect(this.x-this.w/2,this.y,this.w,this.h);
+                }
+            });
+        }
+    }
+
+    else{
+
+        if(frame%50===0){
+
+            for(let i=0;i<4;i++){
+
+                let ang=i*Math.PI*2/4;
+
+                let drop=new Bullet(
+                    boss.x,
+                    boss.y,
+                    ang,
+                    2,
+                    "black",
+                    12,
+                    2
+                );
+
+                drop.bounced=false;
+
+                drop.update=function(){
+
+                    this.x+=this.vx;
+                    this.y+=this.vy;
+
+                    if(!this.bounced){
+
+                        let hit=false;
+
+                        if(this.x<=this.r||this.x>=canvas.width-this.r){
+                            this.vx*=-1;
+                            hit=true;
+                        }
+
+                        if(this.y<=this.r||this.y>=canvas.height-this.r){
+                            this.vy*=-1;
+                            hit=true;
+                        }
+
+                        if(hit){
+                            this.bounced=true;
+                        }
+                    }
+                };
+
+                drop.draw=function(){
+
+                    ctx.save();
+                    ctx.translate(this.x,this.y);
+
+                    let ang=Math.atan2(this.vy,this.vx);
+                    ctx.rotate(ang+Math.PI/2);
+
+                    ctx.shadowColor="black";
+                    ctx.shadowBlur=20;
+
+                    ctx.fillStyle="#111";
+
+                    ctx.beginPath();
+                    ctx.moveTo(0,-18);
+                    ctx.quadraticCurveTo(18,-8,12,10);
+                    ctx.lineTo(6,26);
+                    ctx.lineTo(-6,26);
+                    ctx.lineTo(-12,10);
+                    ctx.quadraticCurveTo(-18,-8,0,-18);
+                    ctx.fill();
+
+                    ctx.strokeStyle="#000";
+                    ctx.lineWidth=4;
+
+                    for(let i=-1.5;i<=1.5;i++){
+                        ctx.beginPath();
+                        ctx.moveTo(i*6,24);
+                        ctx.lineTo(i*10,36);
+                        ctx.stroke();
+                    }
+
+                    ctx.fillStyle="red";
+                    ctx.beginPath();
+                    ctx.arc(-5,-2,2,0,Math.PI*2);
+                    ctx.arc(5,-2,2,0,Math.PI*2);
+                    ctx.fill();
+
+                    ctx.restore();
+                };
+
+                enemyBullets.push(drop);
+            }
+        }
+    }
+
+if(boss.hp>=10000&&boss.hp<=17500&&clones.length===0){
+
+        clones.push(
+            {x:220,y:180},
+            {x:canvas.width-220,y:180},
+            {x:canvas.width/2,y:260}
+        );
+    }
+}
+
+function useSkill(){
+
+    if(skillCooldown>0) return;
+
+    if(currentChar===0){
+
+        skillCooldown=480;
+
+        let skills=["light","dark","earth","water","fire","wind"];
+
+// 10% tỉ lệ nguyên tố cầu vồng
+if(Math.random() < 0.1){
+
+    currentElement = "rainbow(ultimate)";
+
+    skillCooldown = 720;
+
+    screenFlash = 120;
+    screenShake = 35;
+    bossFreeze = 90;
+
+    rainbowLaser.push({
+
+        x: player.x,
+        y: 0,
+
+        w: 140,
+        h: canvas.height,
+
+        timer: 90,
+
+        update(){
+
+            this.x = player.x;
+
+            this.timer--;
+
+// gây dmg liên tục cho boss chính
+if(
+    Math.abs(boss.x - this.x)
+    < this.w/2 + 60
+){
+    boss.hp -= 45;
+}
+
+// gây dmg cho clones
+clones.forEach(c=>{
+
+    if(
+        Math.abs(c.x - this.x)
+        < this.w/2 + 60
+    ){
+        boss.hp -= 45;
+    }
+});
+
+// gây dmg cho trioBoss
+trioBoss.forEach(c=>{
+
+    if(
+        Math.abs(c.x - this.x)
+        < this.w/2 + 60
+    ){
+        boss.hp -= 45;
+    }
+});
+
+            if(this.timer <= 0){
+                this.dead = true;
+            }
+        },
+
+        draw(){
+
+            let grad =
+            ctx.createLinearGradient(
+                this.x,
+                0,
+                this.x,
+                canvas.height
+            );
+
+            grad.addColorStop(0,"red");
+            grad.addColorStop(0.16,"orange");
+            grad.addColorStop(0.32,"yellow");
+            grad.addColorStop(0.48,"lime");
+            grad.addColorStop(0.64,"cyan");
+            grad.addColorStop(0.8,"blue");
+            grad.addColorStop(1,"magenta");
+
+            ctx.fillStyle = grad;
+
+            ctx.shadowColor = "white";
+            ctx.shadowBlur = 40;
+
+            ctx.fillRect(
+                this.x - this.w/2,
+                this.y,
+                this.w,
+                this.h
+            );
+
+            // lõi trắng
+            ctx.fillStyle =
+            "rgba(255,255,255,0.9)";
+
+            ctx.fillRect(
+                this.x - 20,
+                this.y,
+                40,
+                this.h
+            );
+
+            ctx.shadowBlur = 0;
+        }
+    });
+
+    return;
+}
+       
+currentElement=skills[Math.floor(Math.random()*6)];
+
+        if(currentElement==="light"){
+
+            screenFlash=80;
+            bossFreeze=80;
+
+            for(let i=0;i<40;i++){
+                playerBullets.push(new Bullet(
+                    player.x,player.y,
+                    i*Math.PI*2/40,
+                    7,"#ffffaa",6,6
+                ));
+            }
+        }
+
+        else if(currentElement==="dark"){
+
+            for(let i=0;i<5;i++){
+
+                let orb=new Bullet(player.x,player.y,i*Math.PI*2/5,4,"#5522aa",24,1);
+
+                orb.update=function(){
+                    let ang=Math.atan2(boss.y-this.y,boss.x-this.x);
+                    this.vx=Math.cos(ang)*4;
+                    this.vy=Math.sin(ang)*4;
+                    this.x+=this.vx;
+                    this.y+=this.vy;
+                };
+
+                playerBullets.push(orb);
+            }
+        }
+
+        else if(currentElement==="earth"){
+
+            for(let i=0;i<19;i++){
+                let rock=new Bullet(player.x,canvas.height+50,-Math.PI/2,8,"#886633",16,10);
+                rock.x=(canvas.width/18)*i;
+                playerBullets.push(rock);
+            }
+        }
+
+        else if(currentElement==="water"){
+
+            for(let i=0;i<60;i++){
+                let ang=i*Math.PI*2/60;
+                playerBullets.push(new Bullet(player.x,player.y,ang,5,"skyblue",8,5));
+            }
+        }
+
+        else if(currentElement==="fire"){
+
+            for(let i=0;i<10;i++){
+                playerBullets.push(new Bullet(player.x,player.y,-Math.PI/2+(Math.random()-0.5)*0.6,10,"#ff6633",14,9));
+            }
+        }
+
+        else if(currentElement==="wind"){
+
+            for(let i=0;i<50;i++){
+                playerBullets.push(new Bullet(player.x,player.y,i*Math.PI*2/50,9,"#aaffff",4,3));
+            }
+        }
+    }
+
+    if(currentChar===1){
+
+        skillCooldown=600;
+        player.hp=Math.min(player.maxHp,player.hp+1);
+        bossFreeze=140;
+    }
+
+    if(currentChar===2){
+
+        skillCooldown=420;
+        screenFlash=240;
+        bossFreeze=240;
+    }
+
+    if(currentChar===3){
+
+        skillCooldown=520;
+        fastMode=300;
+    }
+
+if(currentChar === 4){
+
+    if(skillCooldown > 0) return;
+
+    skillCooldown = 60;
+
+    // teleport về giữa map
+    player.x = canvas.width / 2;
+    player.y = canvas.height / 2;
+
+    return;
+}
+
+// ======================
+// NERISSA - OCEAN MAGE
+// ======================
+
+if(currentChar === 5){
+
+    if(skillCooldown > 0) return;
+
+    skillCooldown = 360;
+
+    screenShake = 20;
+
+    // sóng biển từ dưới
+    for(let i=0;i<19;i++){
+
+        let wave = new Bullet(
+            player.x,
+            canvas.height + 80,
+            -Math.PI/2,
+            8,
+            "#44bbff",
+            16,
+            5
+        );
+
+        wave.x = (canvas.width/18)*i;
+
+        wave.wave = true;
+
+        wave.draw = function(){
+
+            ctx.save();
+
+            ctx.translate(this.x,this.y);
+
+            ctx.shadowColor = "#66ddff";
+            ctx.shadowBlur = 25;
+
+            // thân sóng
+            let grad =
+            ctx.createLinearGradient(
+                0,-60,
+                0,60
+            );
+
+            grad.addColorStop(0,"#ddffff");
+            grad.addColorStop(0.4,"#66ccff");
+            grad.addColorStop(1,"#0066cc");
+
+            ctx.fillStyle = grad;
+
+ctx.fillRect(
+    -20,
+    -60,
+    40,
+    120
+);
+
+            // bọt nước
+            ctx.fillStyle =
+            "rgba(255,255,255,0.8)";
+
+            for(let j=0;j<4;j++){
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    (Math.random()-0.5)*26,
+                    -35 + Math.random()*20,
+                    3 + Math.random()*4,
+                    0,
+                    Math.PI*2
+                );
+
+                ctx.fill();
+            }
+
+            ctx.restore();
+        };
+
+        playerBullets.push(wave);
+    }
+
+    // sóng biển từ trên
+    for(let i=0;i<19;i++){
+
+        let wave = new Bullet(
+            player.x,
+            -80,
+            Math.PI/2,
+            8,
+            "#66ddff",
+            16,
+            5
+        );
+
+        wave.x = (canvas.width/18)*i;
+
+        wave.wave = true;
+
+        wave.draw = function(){
+
+            ctx.save();
+
+            ctx.translate(this.x,this.y);
+            ctx.rotate(Math.PI);
+
+            ctx.shadowColor = "#88eeff";
+            ctx.shadowBlur = 25;
+
+            let grad =
+            ctx.createLinearGradient(
+                0,-60,
+                0,60
+            );
+
+            grad.addColorStop(0,"#ffffff");
+            grad.addColorStop(0.4,"#77ddff");
+            grad.addColorStop(1,"#0055aa");
+
+            ctx.fillStyle = grad;
+
+ctx.fillRect(
+    -20,
+    -60,
+    40,
+    120
+);
+
+            ctx.fillStyle =
+            "rgba(255,255,255,0.85)";
+
+            for(let j=0;j<4;j++){
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    (Math.random()-0.5)*26,
+                    -35 + Math.random()*20,
+                    3 + Math.random()*4,
+                    0,
+                    Math.PI*2
+                );
+
+                ctx.fill();
+            }
+
+            ctx.restore();
+        };
+
+        playerBullets.push(wave);
+    }
+
+    return;
+}
+
+}
+
+document.getElementById("skillBtn")
+.addEventListener("touchstart",e=>{
+    e.preventDefault();
+    useSkill();
+});
+
+let lastX,lastY;
+
+window.addEventListener("touchstart",e=>{
+    lastX=e.touches[0].clientX;
+    lastY=e.touches[0].clientY;
+});
+
+window.addEventListener("touchmove",e=>{
+    if(!gameStarted) return;
+
+    e.preventDefault();
+
+if(paralyzeTimer > 0){
+    return;
+}
+
+    let x=e.touches[0].clientX;
+    let y=e.touches[0].clientY;
+
+    let mult=fastMode>0?2.7:1;
+
+    // NYXARA làm điều khiển khó hơn
+    if(darkControl > 0){
+
+        mult *= 0.45;
+
+        player.x-=(x-lastX)*mult;
+        player.y+=(y-lastY)*mult*0.5;
+    }
+
+    else{
+
+        player.x+=(x-lastX)*mult;
+        player.y+=(y-lastY)*mult;
+    }
+
+    lastX=x;
+    lastY=y;
+
+    player.x=Math.max(
+        20,
+        Math.min(canvas.width-20,player.x)
+    );
+
+    player.y=Math.max(
+        20,
+        Math.min(canvas.height-20,player.y)
+    );
+
+},{passive:false});
+
+function update(){
+
+    frame++;
+
+if(hitFlash > 0) hitFlash--;
+    if(player.invuln>0) player.invuln--;
+    if(skillCooldown>0) skillCooldown--;
+    if(screenFlash>0) screenFlash--;
+    if(bossFreeze>0) bossFreeze--;
+    if(fastMode>0) fastMode--;
+if(paralyzeTimer > 0)
+paralyzeTimer--;
+if(darkControl > 0)
+darkControl--;
+if(screenShake > 0)
+screenShake--;
+
+for(let i = poisonQueue.length - 1; i >= 0; i--){
+    poisonQueue[i]--;
+
+    if(poisonQueue[i] <= 0){
+        player.hp -= 1;
+        poisonQueue.splice(i, 1);
+    }
+}
+
+if(bossFreeze<=0){
+    boss.x = canvas.width/2 + Math.sin(frame*0.01)*180;
+    boss.y = 140 + Math.sin(frame*0.02)*45;
+}
+
+    clones.forEach((c,i)=>{
+        c.x+=Math.sin(frame*0.02+i)*1.4;
+        c.y+=Math.cos(frame*0.03+i);
+    });
+
+if(bossFreeze <= 0){
+    trioBoss.forEach((c,i)=>{
+        c.x += Math.sin(frame*0.02 + i) * 1.4;
+        c.y += Math.cos(frame*0.03 + i);
+    });
+}
+
+if(selectedChapter === 2 && boss.hp < 10000){
+    clones = [];
+}
+
+    spawnPattern();
+
+if(currentChar===0 && frame%6===0){
+
+    let dragonX = player.x - 55;
+    let dragonY = player.y - 10;
+
+    dragonFire.push(
+        new Bullet(
+            dragonX - 66,
+            dragonY - 2,
+            -Math.PI/2+(Math.random()-0.5)*0.5,
+            10,
+            "#ff6633",
+            5,
+            3
+        )
+    );
+}
+
+    if(frame%5===0){
+        playerBullets.push(new Bullet(player.x,player.y,-Math.PI/2,11,"white",4,2));
+    }
+
+enemyBullets.forEach(b=>{
+
+    b.update();
+
+    let hit = false;
+
+    if(b.r){
+
+        // warning chưa gây damage
+        if(b.active === false){
+
+            hit = false;
+        }
+
+        else{
+
+            hit =
+            Math.hypot(
+                b.x-player.x,
+                b.y-player.y
+            ) < 10 + b.r;
+        }
+    }
+
+    else{
+
+        hit =
+        player.x > b.x-b.w/2 &&
+        player.x < b.x+b.w/2 &&
+        player.y > b.y &&
+        player.y < b.y+b.h;
+    }
+
+if(hit && player.invuln<=0){
+
+    player.hp -= (b.dmg || 1);
+
+    player.invuln = 60;
+hitFlash = 60; // 60 frame = 1 giây (mỗi 0.1s = 6 frame)
+if(b.paralyze){
+
+    paralyzeTimer = 180;
+}
+
+if(b.poison){
+    poisonQueue.push(60); // 1 giây (60 frame)
+}
+
+if(b.dark){
+
+    darkControl = 240;
+}
+
+if(b.freeze){
+    paralyzeTimer = 180; // Cryselia freeze = tê liệt
+}
+
+        if(player.hp <= 0){
+
+            gameOver = true;
+
+            ctx.fillStyle =
+            "rgba(0,0,0,0.7)";
+
+            ctx.fillRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+            ctx.fillStyle = "red";
+
+            ctx.font =
+            "bold 80px sans-serif";
+
+            ctx.textAlign = "center";
+
+            ctx.fillText(
+                "GAME OVER",
+                canvas.width/2,
+                canvas.height/2
+            );
+
+            alert("GAME OVER");
+
+            return;
+        }
+    }
+
+// xoá nếu ra khỏi mép 500px
+if(
+    b.x < -500 ||
+    b.x > canvas.width + 500 ||
+    b.y < -500 ||
+    b.y > canvas.height + 500
+){
+    b.dead = true;
+}
+
+    });
+
+enemyBullets = enemyBullets.filter(b => !b.dead);
+
+rainbowLaser.forEach(l=>l.update());
+
+rainbowLaser =
+rainbowLaser.filter(l=>!l.dead);
+[...playerBullets,...dragonFire].forEach(b=>{
+
+    b.update();
+
+    // xoá nếu ra khỏi mép 500px
+    if(
+        b.x < -500 ||
+        b.x > canvas.width + 500 ||
+        b.y < -500 ||
+        b.y > canvas.height + 500
+    ){
+        b.dead = true;
+    }
+
+[boss, ...trioBoss, ...clones].forEach(t => {
+    if (Math.hypot(b.x - t.x, b.y - t.y) < 60) {
+        boss.hp -= b.dmg;
+    }
+});
+}); 
+
+playerBullets =
+playerBullets.filter(b=>!b.dead);
+
+dragonFire =
+dragonFire.filter(b=>!b.dead);
+
+document.getElementById("hpFill").style.width=(player.hp/player.maxHp)*100+"%";
+    let bossHp, bossMax;
+
+document.getElementById("bossFill").style.width =
+(boss.hp / boss.maxHp) * 100 + "%";
+    document.getElementById("info").innerHTML=
+    names[currentChar]+"<br>Skill CD: "+Math.ceil(skillCooldown/60)+
+    (currentChar===0?"<br>Element: "+currentElement:"");
+
+if(boss.hp<=0){
+
+    // =====================
+    // STAGE 2
+    // =====================
+
+    if(stage === 1){
+
+        stage = 2;
+
+enemyBullets = [];
+playerBullets = [];
+dragonFire = [];
+clones = [];
+trioBoss = [];
+
+        frame = 0;
+
+        boss.x = canvas.width/2;
+        boss.y = 140;
+
+        player.hp = player.maxHp;
+        player.invuln = 120;
+
+        if(selectedChapter === 1){
+
+            boss.maxHp = 10000;
+            boss.hp = 10000;
+
+            document.querySelector("#ui").innerHTML = `
+HP
+<div class="bar">
+<div id="hpFill" class="fill"></div>
+</div>
+
+Boss HP - Name Boss: Vireltha
+<div class="bar">
+<div id="bossFill" class="fill"></div>
+</div>
+
+<div id="info"></div>
+`;
+        }
+
+        else if(selectedChapter === 2){
+
+            boss.maxHp = 15000;
+            boss.hp = 15000;
+
+            document.querySelector("#ui").innerHTML = `
+HP
+<div class="bar">
+<div id="hpFill" class="fill"></div>
+</div>
+
+Boss HP - Name Boss: Nyxara
+<div class="bar">
+<div id="bossFill" class="fill"></div>
+</div>
+
+<div id="info"></div>
+`;
+        }
+
+        else if(selectedChapter === 3){
+
+            boss.maxHp = 10000;
+            boss.hp = 10000;
+
+            document.querySelector("#ui").innerHTML = `
+HP
+<div class="bar">
+<div id="hpFill" class="fill"></div>
+</div>
+
+Boss HP - Name Boss: Cryselia
+<div class="bar">
+<div id="bossFill" class="fill"></div>
+</div>
+
+<div id="info"></div>
+`;
+        }
+
+        else if(selectedChapter === 4){
+
+            boss.maxHp = 20000;
+            boss.hp = 20000;
+
+            document.querySelector("#ui").innerHTML = `
+HP
+<div class="bar">
+<div id="hpFill" class="fill"></div>
+</div>
+
+Boss HP - Name Boss: Thalvorn
+<div class="bar">
+<div id="bossFill" class="fill"></div>
+</div>
+
+<div id="info"></div>
+`;
+        }
+
+        return;
+    }
+
+    gameOver = true;
+
+    ctx.fillStyle = "rgba(0,0,0,0.7)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    ctx.fillStyle = "#66ffcc";
+    ctx.font = "bold 80px sans-serif";
+    ctx.textAlign = "center";
+
+    ctx.fillText(
+        "VICTORY",
+        canvas.width/2,
+        canvas.height/2
+    );
+
+    alert("VICTORY");
+
+    return;
+}
+
+}
+
+function draw(){
+
+let shakeX=0,shakeY=0;
+
+if(screenShake>0){
+    shakeX=(Math.random()-0.5)*screenShake;
+    shakeY=(Math.random()-0.5)*screenShake;
+}
+
+ctx.save();
+ctx.translate(shakeX,shakeY);
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+if(screenFlash>0){
+    ctx.fillStyle="rgba(255,255,255,0.35)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+}
+
+let currentBossImg;
+
+if(selectedChapter === 4){
+
+    if(stage === 1){
+
+ctx.drawImage(
+    chapter4Stage1Img,
+    boss.x - 80,
+    boss.y - 80,
+    160,
+    160
+);
+
+    }else{
+
+        ctx.drawImage(
+            chapter4Stage2Img,
+            boss.x - 80,
+            boss.y - 80,
+            160,
+            160
+        );
+    }
+
+}else{
+
+    if(stage === 1){
+
+        if(selectedChapter === 1){
+            currentBossImg = bossImg1;
+        }
+        else if(selectedChapter === 2){
+            currentBossImg = bossImg2;
+        }
+        else if(selectedChapter === 3){
+            currentBossImg = iceDragonImg;
+        }
+
+    }else{
+
+        if(selectedChapter === 1){
+            currentBossImg = bossImg3;
+        }
+        else if(selectedChapter === 2){
+            currentBossImg = bossImg4;
+        }
+        else if(selectedChapter === 3){
+            currentBossImg = cryseliaImg;
+        }
+    }
+
+    ctx.drawImage(
+        currentBossImg,
+        boss.x - 80,
+        boss.y - 80,
+        160,
+        160
+    );
+}
+
+trioBoss.forEach(c=>{
+    ctx.drawImage(chapter4Stage1Img,c.x-55,c.y-55,110,110);
+});
+
+clones.forEach(c=>{
+    ctx.globalAlpha=0.6;
+    ctx.drawImage(bossImg2,c.x-55,c.y-55,110,110);
+    ctx.globalAlpha=1;
+});
+
+// ===== SERAPHINE CENTER RING =====
+if(selectedChar === 4 || currentChar === 4){
+
+    ctx.save();
+
+ctx.strokeStyle = "rgba(0,140,255,0.85)";
+ctx.shadowColor = "#00b3ff";
+    ctx.shadowBlur = 20;
+    ctx.lineWidth = 4;
+
+    ctx.beginPath();
+    ctx.arc(canvas.width/2, canvas.height/2, 70, 0, Math.PI*2);
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+// EFFECT TRÓI FLORENSYA
+
+if(
+    currentChar===1 &&
+    bossFreeze>0
+){
+
+    ctx.save();
+
+    ctx.translate(
+        boss.x,
+        boss.y
+    );
+
+    for(let i=0;i<6;i++){
+
+        ctx.strokeStyle=
+        "#44aa44";
+
+        ctx.lineWidth=6;
+
+        ctx.shadowColor=
+        "#66ff66";
+
+        ctx.shadowBlur=10;
+
+        ctx.beginPath();
+
+        for(let t=0;t<Math.PI*2;t+=0.15){
+
+            let r=
+            30+i*8+
+            Math.sin(
+                t*6+
+                frame*0.08
+            )*4;
+
+            let x=
+            Math.cos(
+                t+i
+            )*r;
+
+            let y=
+            Math.sin(
+                t+i
+            )*r;
+
+            if(t===0){
+
+                ctx.moveTo(x,y);
+
+            }else{
+
+                ctx.lineTo(x,y);
+            }
+        }
+
+        ctx.stroke();
+    }
+
+    // lá cây
+
+    for(let i=0;i<10;i++){
+
+        let ang=
+        i*Math.PI*2/10+
+        frame*0.02;
+
+        let x=
+        Math.cos(ang)*55;
+
+        let y=
+        Math.sin(ang)*55;
+
+        ctx.fillStyle=
+        "#88ff88";
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            x,
+            y,
+            8,
+            4,
+            ang,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+    }
+
+    ctx.restore();
+}
+
+// DARK CONTROL EFFECT
+
+if(darkControl > 0){
+
+    ctx.fillStyle =
+    "rgba(0,0,0,0.35)";
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+}
+
+// RỒNG CAM CẠNH ASTRAEA
+
+if(currentChar === 0){
+
+    let dragonX = player.x - 55;
+    let dragonY = player.y - 10;
+
+    ctx.save();
+
+    ctx.translate(dragonX, dragonY);
+
+    // đuôi dài mảnh
+    ctx.strokeStyle = "#ff8844";
+    ctx.lineWidth = 6;
+    ctx.lineCap = "round";
+
+    ctx.beginPath();
+    ctx.moveTo(34,0);
+    ctx.quadraticCurveTo(
+        60,10,
+        78,30
+    );
+    ctx.stroke();
+
+    // thân dài
+    ctx.fillStyle = "#ff6633";
+
+    ctx.beginPath();
+    ctx.ellipse(
+        10,0,
+        30,10,
+        0,
+        0,
+        Math.PI*2
+    );
+    ctx.fill();
+
+    // cổ
+    ctx.save();
+
+    ctx.translate(-12,-2);
+    ctx.rotate(-0.2);
+
+    ctx.fillRect(
+        -12,
+        -5,
+        24,
+        10
+    );
+
+    ctx.restore();
+
+    // đầu nhỏ
+    ctx.beginPath();
+    ctx.ellipse(
+        -28,-4,
+        14,10,
+        -0.1,
+        0,
+        Math.PI*2
+    );
+    ctx.fill();
+
+    // mõm nhọn
+    ctx.beginPath();
+    ctx.moveTo(-38,-7);
+    ctx.lineTo(-52,-4);
+    ctx.lineTo(-38,2);
+    ctx.fill();
+
+    // cánh trên
+    ctx.fillStyle = "#ff9955";
+
+    ctx.beginPath();
+    ctx.moveTo(0,-4);
+    ctx.quadraticCurveTo(
+        -10,-34,
+        16,-16
+    );
+    ctx.lineTo(10,-2);
+    ctx.fill();
+
+    // cánh dưới
+    ctx.beginPath();
+    ctx.moveTo(4,6);
+    ctx.quadraticCurveTo(
+        -4,24,
+        20,14
+    );
+    ctx.lineTo(14,4);
+    ctx.fill();
+
+    // sừng
+    ctx.strokeStyle = "#ffe0aa";
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+    ctx.moveTo(-32,-10);
+    ctx.lineTo(-38,-18);
+
+    ctx.moveTo(-24,-11);
+    ctx.lineTo(-26,-20);
+
+    ctx.stroke();
+
+    // mắt
+    ctx.fillStyle = "yellow";
+
+    ctx.beginPath();
+    ctx.arc(
+        -33,-5,
+        2,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    // glow
+    ctx.shadowColor = "#ff8844";
+    ctx.shadowBlur = 18;
+
+    // lửa ở miệng
+    ctx.fillStyle = "#ffaa44";
+
+    ctx.beginPath();
+    ctx.moveTo(-52,-4);
+    ctx.lineTo(-66,-8);
+    ctx.lineTo(-62,-1);
+    ctx.lineTo(-70,2);
+    ctx.lineTo(-54,1);
+
+    ctx.fill();
+
+    ctx.restore();
+}
+
+if(hitFlash > 0){
+    if(Math.floor(hitFlash / 6) % 2 === 0){
+        ctx.globalAlpha = 0.3;
+    }
+}
+
+ctx.drawImage(
+    charImgs[currentChar],
+    player.x-35,
+    player.y-35,
+    70,
+    70
+);
+
+ctx.globalAlpha = 1;
+
+if(paralyzeTimer > 0){
+
+    // ===== CHAPTER 3 STAGE 2: KHỐI BĂNG CỐ ĐỊNH =====
+    if(selectedChapter === 3 && stage === 2){
+
+        ctx.save();
+
+        ctx.fillStyle = "rgba(120,220,255,0.22)";
+
+        ctx.shadowColor = "#99eeff";
+        ctx.shadowBlur = 25;
+
+        let size = 100; // CỐ ĐỊNH, KHÔNG DAO ĐỘNG
+
+        ctx.fillRect(
+            player.x - size/2,
+            player.y - size/2,
+            size,
+            size
+        );
+
+        ctx.restore();
+    }
+
+    // ===== PARALYZE THƯỜNG: XANH LÁ =====
+    else{
+
+        ctx.strokeStyle = "#44ff66";
+        ctx.lineWidth = 4;
+        ctx.shadowColor = "#66ff88";
+        ctx.shadowBlur = 15;
+
+        for(let i = 0; i < 6; i++){
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                player.x + (Math.random() - 0.5) * 40,
+                player.y + (Math.random() - 0.5) * 40
+            );
+
+            ctx.lineTo(
+                player.x + (Math.random() - 0.5) * 40,
+                player.y + (Math.random() - 0.5) * 40
+            );
+
+            ctx.stroke();
+        }
+
+        ctx.shadowBlur = 0;
+    }
+}
+
+rainbowLaser.forEach(l=>l.draw());
+
+enemyBullets.forEach(b=>b.draw());
+playerBullets.forEach(b=>b.draw());
+dragonFire.forEach(b=>b.draw());
+
+ctx.restore();
+}
+
+function loop(){
+    if(gameOver) return;
+    draw();
+    update();
+    requestAnimationFrame(loop);
+}
+
+</script>
+</body>
+</html>
