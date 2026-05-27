@@ -1,0 +1,12628 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+
+content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+
+  
+
+<title>Magic Rebellion</title>
+
+  
+
+<style>
+
+  
+
+body{
+
+margin:0;
+
+overflow:hidden;
+
+background:black;
+
+touch-action:none;
+
+font-family:sans-serif;
+
+}
+
+  
+
+canvas{
+
+display:block;
+
+background:
+
+radial-gradient(circle at center,
+
+#1b1b35,
+
+#050510 70%);
+
+}
+
+  
+
+#select{
+
+  
+
+position:absolute;
+
+inset:0;
+
+  
+
+background:
+
+rgba(0,0,0,0.92);
+
+  
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+justify-content:center;
+
+  
+
+color:white;
+
+z-index:10;
+
+}
+
+  
+
+.card{
+
+  
+
+width:260px;
+
+padding:14px;
+
+margin:10px;
+
+  
+
+border:2px solid white;
+
+border-radius:14px;
+
+  
+
+text-align:center;
+
+  
+
+background:
+
+rgba(255,255,255,0.06);
+
+}
+
+  
+
+.selectedCard{
+
+  
+
+border:2px solid #66ff66;
+
+box-shadow:
+
+0 0 25px #66ff66;
+
+  
+
+background:
+
+rgba(80,255,120,0.15);
+
+  
+
+transform:scale(1.05);
+
+}
+
+  
+
+.chapterBtn{
+
+  
+
+width:140px;
+
+padding:10px;
+
+  
+
+margin:6px;
+
+  
+
+border-radius:10px;
+
+border:2px solid white;
+
+  
+
+background:
+
+rgba(255,255,255,0.08);
+
+  
+
+color:white;
+
+  
+
+font-weight:bold;
+
+}
+
+  
+
+.activeChapter{
+
+  
+
+border:2px solid #66ccff;
+
+  
+
+box-shadow:
+
+0 0 20px #66ccff;
+
+  
+
+background:
+
+rgba(80,180,255,0.2);
+
+}
+
+  
+
+#startBtn{
+
+  
+
+margin-top:20px;
+
+  
+
+width:220px;
+
+padding:14px;
+
+  
+
+border:none;
+
+border-radius:14px;
+
+  
+
+background:
+
+linear-gradient(
+
+to right,
+
+#33aa33,
+
+#66ff66
+
+);
+
+  
+
+color:white;
+
+  
+
+font-size:22px;
+
+font-weight:bold;
+
+  
+
+display:none;
+
+  
+
+box-shadow:
+
+0 0 25px #44ff44;
+
+}
+
+  
+
+#ui{
+
+  
+
+position:absolute;
+
+top:10px;
+
+left:10px;
+
+  
+
+color:white;
+
+z-index:5;
+
+  
+
+text-shadow:0 0 5px black;
+
+}
+
+  
+
+.bar{
+
+  
+
+width:260px;
+
+height:16px;
+
+  
+
+background:#222;
+
+  
+
+border-radius:8px;
+
+overflow:hidden;
+
+  
+
+margin-bottom:8px;
+
+}
+
+  
+
+.fill{
+
+height:100%;
+
+}
+
+  
+
+#hpFill{
+
+background:#44ff88;
+
+}
+
+  
+
+#bossFill{
+
+background:
+
+linear-gradient(to right,
+
+#ff0044,
+
+#ff88aa);
+
+}
+
+  
+
+#skillBtn{
+
+  
+
+position:absolute;
+
+  
+
+right:25px;
+
+bottom:25px;
+
+  
+
+width:90px;
+
+height:90px;
+
+  
+
+border-radius:50%;
+
+  
+
+background:
+
+rgba(100,120,255,0.5);
+
+  
+
+border:3px solid white;
+
+  
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+  
+
+color:white;
+
+font-weight:bold;
+
+z-index:5;
+
+}
+
+  
+
+#switchBtn{
+
+  
+
+position:absolute;
+
+  
+
+right:5px;
+
+bottom:105px;
+
+  
+
+width:55px;
+
+height:55px;
+
+  
+
+border-radius:50%;
+
+  
+
+background:
+
+rgba(255,180,60,0.6);
+
+  
+
+border:3px solid white;
+
+  
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+  
+
+color:white;
+
+font-size:11px;
+
+font-weight:bold;
+
+  
+
+z-index:5;
+
+}
+
+  
+
+#tagBtn{
+
+  
+
+margin-top:14px;
+
+  
+
+width:220px;
+
+padding:12px;
+
+  
+
+border:none;
+
+border-radius:12px;
+
+  
+
+background:
+
+linear-gradient(
+
+to right,
+
+#8844ff,
+
+#bb88ff
+
+);
+
+  
+
+color:white;
+
+  
+
+font-size:18px;
+
+font-weight:bold;
+
+  
+
+box-shadow:
+
+0 0 18px #aa66ff;
+
+}
+
+  
+
+</style>
+
+</head>
+
+  
+
+<body>
+
+  
+
+<div id="select">
+
+  
+
+<h1>
+
+MAGIC REBELLION
+
+</h1>
+
+  
+
+<div style="display:flex;align-items:center;gap:10px;">
+
+  
+
+<button class="chapterBtn" onclick="prevChapter()">
+
+◀
+
+</button>
+
+  
+
+<button class="chapterBtn activeChapter"
+
+onclick="selectChapter(selectedChapter)"
+
+id="chapterBtn">
+
+Chapter 1
+
+</button>
+
+  
+
+<button class="chapterBtn" onclick="nextChapter()">
+
+▶
+
+</button>
+
+  
+
+</div>
+
+  
+
+<div style="display:flex;align-items:center;gap:10px;">
+
+  
+
+<button class="chapterBtn"
+
+onclick="prevCharacter()">
+
+◀
+
+</button>
+
+  
+
+<div class="card"
+
+id="characterCard"
+
+onclick="selectCharacter(selectedPreviewChar)">
+
+Astraea<br>
+
+The Strongest Dragon Creation Mage in the Universe
+
+</div>
+
+  
+
+<button class="chapterBtn"
+
+onclick="nextCharacter()">
+
+▶
+
+</button>
+
+  
+
+</div>
+
+  
+
+<button id="tagBtn" onclick="toggleTagMode()">
+
+TAG TEAM: ON
+
+</button>
+
+  
+
+<button id="startBtn"
+
+onclick="startGame()">
+
+START
+
+</button>
+
+  
+
+</div>
+
+  
+
+<div id="ui">
+
+  
+
+HP
+
+<div class="bar">
+
+<div id="hpFill"
+
+class="fill"></div>
+
+</div>
+
+  
+
+MANA - …
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Name Boss: …
+
+<div class="bar">
+
+<div id="bossFill"
+
+class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+  
+
+</div>
+
+  
+
+<div id="skillBtn">
+
+SKILL
+
+</div>
+
+  
+
+<div id="switchBtn">
+
+SWITCH
+
+</div>
+
+  
+
+<canvas id="game"></canvas>
+
+  
+
+<script>
+
+  
+
+const canvas =
+
+document.getElementById("game");
+
+  
+
+const ctx =
+
+canvas.getContext("2d");
+
+  
+
+canvas.width = innerWidth;
+
+canvas.height = innerHeight;
+
+  
+
+// =======================
+
+// BOSS IMAGE
+
+// =======================
+
+  
+
+const chapter1BossImg =
+
+"https://i.ibb.co/BVWwW4zP/image.png";
+
+  
+
+const chapter2BossImg =
+
+"https://i.ibb.co/LXKjH0qx/image.png";
+
+  
+
+const chapter1Stage2Img =
+
+"https://i.ibb.co/xqMgd3T0/image.png";
+
+  
+
+const chapter2Stage2Img =
+
+"https://i.ibb.co/MynNM602/image.png";
+
+  
+
+const chapter5Stage1Img = new Image();
+
+chapter5Stage1Img.src = "https://i.ibb.co/93Wz9gM0/image.png";
+
+  
+
+const chapter5Stage2Img = new Image();
+
+chapter5Stage2Img.src = "https://i.ibb.co/0yybqxJb/image.png";
+
+  
+
+const bossImg3 = new Image();
+
+bossImg3.src = chapter1Stage2Img;
+
+  
+
+const bossImg4 = new Image();
+
+bossImg4.src = chapter2Stage2Img;
+
+  
+
+const bossImg1 = new Image();
+
+bossImg1.src = chapter1BossImg;
+
+  
+
+const bossImg2 = new Image();
+
+bossImg2.src = chapter2BossImg;
+
+  
+
+const iceDragonImg = new Image();
+
+iceDragonImg.src = "https://i.ibb.co/Z6YSx6QM/image.png";
+
+  
+
+const cryseliaImg = new Image();
+
+cryseliaImg.src = "https://i.ibb.co/TqKqn79d/image.png";
+
+  
+
+const chapter4Stage1Img = new Image();
+
+chapter4Stage1Img.src = "https://i.ibb.co/nMQx7TrJ/image.png";
+
+  
+
+const chapter4Stage2Img = new Image();
+
+chapter4Stage2Img.src = "https://i.ibb.co/HD4s9XmK/image.png";
+
+  
+
+const veilithImg = new Image();
+
+veilithImg.src = "https://i.ibb.co/v4CJZZXd/image.png";
+
+  
+
+const obsidraxImg = new Image();
+
+obsidraxImg.src = "https://i.ibb.co/7JcV1VMn/image.png";
+
+  
+
+// Hakazel & Baktie
+
+const hakabaktieImg = new Image();
+
+hakabaktieImg.src = "https://i.ibb.co/DPjvHC4r/image.png";
+
+  
+
+// Zephira
+
+const zephiraImg = new Image();
+zephiraImg.src = "https://i.ibb.co/tMvXtzBk/image.png";
+
+const thalvornImg = new Image();
+thalvornImg.src = "https://i.ibb.co/yBKRXqKw/image.png";
+
+const ossivarImg = new Image();
+ossivarImg.src = "https://i.ibb.co/XB90JzQ/image.png";
+
+const charImgs=[];
+
+[
+
+"https://i.ibb.co/5XtYw8Sv/image.png",
+
+"https://i.ibb.co/G3THpj7n/image.png",
+
+"https://i.ibb.co/V0K4cVB6/image.png",
+
+"https://i.ibb.co/yFbcn9hs/image.png",
+
+"https://i.ibb.co/0jWJfsk3/image.png",
+
+"https://i.ibb.co/5XYzmjx8/image.png",
+
+"https://i.ibb.co/ccvFR4FM/image.png",
+
+"https://i.ibb.co/wFqqYNLn/image.png",
+"https://i.ibb.co/jkBVZCkw/image.png"
+]
+
+.forEach(src=>{
+
+  
+
+let img = new Image();
+
+  
+
+img.src = src;
+
+  
+
+charImgs.push(img);
+
+});
+
+  
+
+const names = [
+
+"Astraea",
+
+"Florensya",
+
+"Lumina",
+
+"Velocity",
+
+"Seraphine",
+
+"Nerissa",
+
+"Lexira",
+
+"Elaria",
+"Lucien"
+];
+
+  
+
+const descriptions = [
+
+  
+
+"The Strongest Dragon Creation Mage in the Universe",
+
+"Nature Mage",
+
+"Light Mage",
+
+"Super Speed Mage",
+
+"Teacher Portal Mage",
+
+"Ocean Mage",
+
+"Technology Mage",
+
+"Elements Decoy Clone Mage",
+"Soul Fisherman"
+];
+
+  
+
+// =======================
+
+// THÊM BIẾN
+
+// =======================
+
+let currentBossImg;
+
+let elariaClone = null;
+
+let mana = 10;
+
+let maxMana = 10;
+
+let manaRegenTimer = 0;
+
+let dataBits = [];
+
+let tagMode = true;
+
+let teamChars = [];
+
+let activeTag = 0;
+
+let hitFlash = 0;
+
+let trioBosses = [];
+
+let activeTrio = 0;
+
+let selectedPreviewChar = 0;
+
+let poisonQueue = [];
+
+let rainbowLaser = [];
+
+let paralyzeTimer = 0;
+
+let darkControl = 0;
+
+let stage = 1;
+
+let screenShake = 0;
+
+let selectedChar = -1;
+
+let selectedChapter = 1;
+
+const maxChapter = 8;
+
+let gameOver = false;
+
+let currentChar = 0;
+
+let gameStarted=false;
+
+let frame=0;
+
+let screenFlash=0;
+
+let bossFreeze=0;
+
+let fastMode=0;
+
+let skillCooldown=0;
+
+let currentElement="";
+
+let player={
+
+  
+
+x:canvas.width/2,
+
+y:canvas.height-140,
+
+  
+
+hp:10,
+
+maxHp:10,
+
+  
+
+invuln:0
+
+};
+
+  
+
+let boss={
+
+x:canvas.width/2,
+
+y:140,
+
+hp:25000,
+
+maxHp:25000
+
+};
+
+let trioBoss =[];
+let clones=[];
+let enemyBullets=[];
+let playerBullets=[];
+let dragonFire=[];
+let cryselia=[];
+let zephira=[];
+let ossivar=[];
+
+function updateCharacterCard(){
+
+  
+
+const card =
+
+document.getElementById("characterCard");
+
+  
+
+card.innerHTML =
+
+names[selectedPreviewChar] +
+
+"<br>" +
+
+descriptions[selectedPreviewChar];
+
+  
+
+card.classList.remove("selectedCard");
+
+  
+
+if(selectedChar === selectedPreviewChar){
+
+card.classList.add("selectedCard");
+
+}
+
+}
+
+  
+
+function nextCharacter(){
+
+  
+
+selectedPreviewChar++;
+
+  
+
+if(selectedPreviewChar >= names.length){
+
+selectedPreviewChar = 0;
+
+}
+
+  
+
+updateCharacterCard();
+
+}
+
+  
+
+function prevCharacter(){
+
+  
+
+selectedPreviewChar--;
+
+  
+
+if(selectedPreviewChar < 0){
+
+selectedPreviewChar = names.length - 1;
+
+}
+
+  
+
+updateCharacterCard();
+
+}
+
+  
+
+// =======================
+
+// START GAME
+
+// =======================
+
+  
+
+function startGame(){
+
+  
+
+if(selectedChar === -1)
+
+return;
+
+  
+
+currentChar = selectedChar;
+
+  
+
+teamChars = [];
+
+  
+
+if(tagMode){
+
+  
+
+for(let i=0;i<names.length;i++){
+
+  
+
+if(canUseCharacter(i, selectedChapter)){
+
+  
+
+teamChars.push(i);
+
+}
+
+}
+
+  
+
+}else{
+
+  
+
+teamChars.push(selectedChar);
+
+}
+
+  
+
+activeTag =
+
+teamChars.indexOf(currentChar);
+
+  
+
+gameStarted = true;
+
+  
+
+document.getElementById("switchBtn").style.display =
+
+tagMode ? "flex" : "none";
+
+  
+
+enemyBullets = [];
+
+clones = [];
+
+stage = 1;
+
+  
+
+// =========================
+
+// CHAPTER 1
+
+// =========================
+
+if(selectedChapter === 1){
+
+  
+
+boss.maxHp = 30000;
+
+boss.hp = 30000;
+
+  
+
+document.querySelector("#ui").innerHTML = `
+
+HP
+
+<div class="bar">
+
+<div id="hpFill" class="fill"></div>
+
+</div>
+
+  
+
+MANA${tagMode ? "" : " - " + (currentChar === 0 ? "Infinity" : maxMana)}
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Name Boss: Glaciron
+
+<div class="bar">
+
+<div id="bossFill" class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+`;
+
+}
+
+  
+
+// =========================
+
+// CHAPTER 2
+
+// =========================
+
+else if(selectedChapter === 2){
+
+  
+
+boss.maxHp = 17500;
+
+boss.hp = 17500;
+
+  
+
+document.querySelector("#ui").innerHTML = `
+
+HP
+
+<div class="bar">
+
+<div id="hpFill" class="fill"></div>
+
+</div>
+
+  
+
+MANA${tagMode ? "" : " - " + (currentChar === 0 ? "Infinity" : maxMana)}
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Name Boss: Skorvax
+
+<div class="bar">
+
+<div id="bossFill" class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+`;
+
+}
+
+  
+
+// =========================
+
+// CHAPTER 3
+
+// =========================
+
+else if(selectedChapter === 3){
+
+  
+
+boss.maxHp = 20000; // Ice Dragon
+
+boss.hp = 20000;
+
+  
+
+document.querySelector("#ui").innerHTML = `
+
+HP
+
+<div class="bar">
+
+<div id="hpFill" class="fill"></div>
+
+</div>
+
+  
+
+MANA${tagMode ? "" : " - " + (currentChar === 0 ? "Infinity" : maxMana)}
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Name Boss: Ice Dragon
+
+<div class="bar">
+
+<div id="bossFill" class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+`;
+
+}
+
+  
+
+else if(selectedChapter === 4){
+
+  
+
+boss.maxHp = 30000;
+
+boss.hp = 30000;
+
+  
+
+document.querySelector("#ui").innerHTML = `
+
+HP
+
+<div class="bar">
+
+<div id="hpFill" class="fill"></div>
+
+</div>
+
+  
+
+MANA${tagMode ? "" : " - " + (currentChar === 0 ? "Infinity" : maxMana)}
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Hero Hunter Group
+
+<div class="bar">
+
+<div id="bossFill" class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+`;
+
+}
+
+  
+
+else if(selectedChapter === 5){
+
+  
+
+boss.maxHp = 35000;
+
+boss.hp = 35000;
+
+  
+
+document.querySelector("#ui").innerHTML = `
+
+HP
+
+<div class="bar">
+
+<div id="hpFill" class="fill"></div>
+
+</div>
+
+  
+
+MANA${tagMode ? "" : " - " + (currentChar === 0 ? "Infinity" : maxMana)}
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Name Boss: Titanor
+
+<div class="bar">
+
+<div id="bossFill" class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+`;
+
+}
+
+  
+
+else if(selectedChapter === 6){
+
+  
+
+boss.maxHp = 10000;
+
+boss.hp = 10000;
+
+  
+
+document.querySelector("#ui").innerHTML = `
+
+HP
+
+<div class="bar">
+
+<div id="hpFill" class="fill"></div>
+
+</div>
+
+  
+
+MANA${tagMode ? "" : " - " + (currentChar === 0 ? "Infinity" : maxMana)}
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Name Boss: Veilith
+
+<div class="bar">
+
+<div id="bossFill" class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+`;
+
+}
+
+  
+
+else if(selectedChapter === 7){
+
+  
+
+boss.maxHp = 10000;
+
+boss.hp = 10000;
+
+  
+
+document.querySelector("#ui").innerHTML = `
+
+HP
+
+<div class="bar">
+
+<div id="hpFill" class="fill"></div>
+
+</div>
+
+  
+
+MANA${tagMode ? "" : " - " + (currentChar === 0 ? "Infinity" : maxMana)}
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Name Boss: Hakazel & Baktie
+
+<div class="bar">
+
+<div id="bossFill" class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+`;
+
+}
+
+  
+
+else if(selectedChapter === 8){
+
+  
+
+boss.maxHp = 30000;
+
+boss.hp = 30000;
+
+  
+
+document.querySelector("#ui").innerHTML = `
+
+HP
+
+<div class="bar">
+
+<div id="hpFill" class="fill"></div>
+
+</div>
+
+  
+
+MANA${tagMode ? "" : " - " + (currentChar === 0 ? "Infinity" : maxMana)}
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Name Boss: Veilith & Cryselia & Zephira
+
+<div class="bar">
+
+<div id="bossFill" class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+`;
+
+}
+
+  
+
+mana = maxMana;
+
+manaRegenTimer = 0;
+
+document.getElementById("select").style.display = "none";
+
+requestAnimationFrame(loop);
+
+}
+
+  
+
+function selectCharacter(id){
+
+  
+
+selectedChar = id;
+
+  
+
+updateCharacterCard();
+
+  
+
+const btn =
+
+document.getElementById("chapterBtn");
+
+  
+
+if(
+
+(id === 4 && selectedChapter !== 1) ||
+
+(id === 5 && selectedChapter === 1)
+
+){
+
+  
+
+btn.style.opacity = "0.4";
+
+btn.style.filter = "grayscale(1)";
+
+  
+
+document.getElementById("startBtn").style.display = "none";
+
+  
+
+return;
+
+}
+
+  
+
+btn.style.opacity = "1";
+
+btn.style.filter = "grayscale(0)";
+
+  
+
+document.getElementById("startBtn").style.display = "block";
+
+}
+
+  
+
+function selectChapter(id){
+
+  
+
+selectedChapter = id;
+
+  
+
+const btn = document.getElementById("chapterBtn");
+
+  
+
+if(id === 1) btn.innerText = "Chapter 1";
+
+if(id === 2) btn.innerText = "Chapter 2";
+
+if(id === 3) btn.innerText = "Chapter 3";
+
+if(id === 4) btn.innerText = "Chapter 4";
+
+if(id === 5) btn.innerText = "Chapter 5";
+
+if(id === 6) btn.innerText = "Chapter 6";
+
+if(id === 7) btn.innerText = "Chapter 7";
+
+if(id === 8) btn.innerText = "Chapter 8";
+
+btn.classList.add("activeChapter");
+
+  
+
+// ===== KHÓA CHAPTER CHO SERAPHINE =====
+
+  
+
+if(
+
+(selectedChar === 4 && id !== 1) ||
+
+(selectedChar === 5 && id === 1)
+
+){
+
+  
+
+btn.style.opacity = "0.4";
+
+btn.style.filter = "grayscale(1)";
+
+  
+
+document.getElementById("startBtn").style.display = "none";
+
+}
+
+  
+
+else{
+
+  
+
+btn.style.opacity = "1";
+
+btn.style.filter = "grayscale(0)";
+
+  
+
+if(selectedChar !== -1){
+
+document.getElementById("startBtn").style.display = "block";
+
+}
+
+}
+
+}
+
+  
+
+class Bullet{
+
+  
+
+constructor(
+
+x,y,
+
+ang,
+
+spd,
+
+color,
+
+r=5,
+
+dmg=1
+
+){
+
+  
+
+this.x=x;
+
+this.y=y;
+
+  
+
+this.vx=
+
+Math.cos(ang)*spd;
+
+  
+
+this.vy=
+
+Math.sin(ang)*spd;
+
+  
+
+this.color=color;
+
+  
+
+this.r=r;
+
+  
+
+this.dmg=dmg;
+
+}
+
+  
+
+update(){
+
+  
+
+this.x+=this.vx;
+
+this.y+=this.vy;
+
+}
+
+  
+
+draw(){
+
+  
+
+ctx.shadowColor=
+
+this.color;
+
+  
+
+ctx.shadowBlur=15;
+
+  
+
+ctx.fillStyle=
+
+this.color;
+
+  
+
+ctx.beginPath();
+
+  
+
+ctx.arc(
+
+this.x,
+
+this.y,
+
+this.r,
+
+0,
+
+Math.PI*2
+
+);
+
+  
+
+ctx.fill();
+
+  
+
+ctx.shadowBlur=0;
+
+}
+
+}
+
+  
+
+function nextChapter(){
+
+selectedChapter++;
+
+if(selectedChapter > maxChapter) selectedChapter = 1;
+
+selectChapter(selectedChapter);
+
+}
+
+  
+
+function prevChapter(){
+
+selectedChapter--;
+
+if(selectedChapter < 1) selectedChapter = maxChapter;
+
+selectChapter(selectedChapter);
+
+}
+
+  
+
+function canUseCharacter(id, chapter){
+
+  
+
+// Seraphine chỉ chapter 1
+
+if(id === 4 && chapter !== 1){
+
+return false;
+
+}
+
+  
+
+// Nerissa không có chapter 1
+
+if(id === 5 && chapter === 1){
+
+return false;
+
+}
+
+  
+
+return true;
+
+}
+
+  
+
+function toggleTagMode(){
+
+  
+
+tagMode = !tagMode;
+
+  
+
+document.getElementById("tagBtn").innerText =
+
+"TAG TEAM: " + (tagMode ? "ON" : "OFF");
+
+}
+
+  
+
+// =======================
+
+// CHAPTER 1 PATTERN
+
+// =======================
+
+  
+
+function spawnPatternChapter1(){
+
+  
+
+let cycle =
+
+frame % 1200;
+
+  
+
+// =================
+
+// PHASE 1
+
+// ORB NỔ
+
+// =================
+
+  
+
+if(cycle < 400){
+
+  
+
+if(frame % 120 === 0){
+
+  
+
+let ang =
+
+  
+
+Math.atan2(
+
+(elariaClone ? elariaClone.y : player.y) - boss.y,
+
+(elariaClone ? elariaClone.x : player.x) - boss.x
+
+)
+
+  
+
+enemyBullets.push({
+
+  
+
+x: boss.x,
+
+y: boss.y,
+
+  
+
+vx: Math.cos(ang) * 6,
+
+vy: Math.sin(ang) * 6,
+
+  
+
+r: 45,
+
+dmg: 2,
+
+life: 100,
+
+  
+
+update(){
+
+  
+
+this.x += this.vx;
+
+this.y += this.vy;
+
+  
+
+this.life--;
+
+  
+
+if(this.life === 0){
+
+  
+
+for(let i=0;i<18;i++){
+
+  
+
+let b = new Bullet(
+
+this.x,
+
+this.y,
+
+i*Math.PI*2/18,
+
+6,
+
+"#99ddff",
+
+10,
+
+1
+
+);
+
+  
+
+b.life = 60;
+
+  
+
+b.update = function(){
+
+  
+
+this.x += this.vx;
+
+this.y += this.vy;
+
+  
+
+this.life--;
+
+  
+
+if(this.life <= 0){
+
+this.dead = true;
+
+}
+
+};
+
+  
+
+enemyBullets.push(b);
+
+}
+
+  
+
+screenShake = 25;
+
+}
+
+  
+
+if(this.life <= -10){
+
+this.dead = true;
+
+}
+
+},
+
+  
+
+draw(){
+
+  
+
+ctx.fillStyle =
+
+"#bfefff";
+
+  
+
+ctx.shadowColor =
+
+"#ccffff";
+
+  
+
+ctx.shadowBlur = 25;
+
+  
+
+ctx.beginPath();
+
+  
+
+ctx.arc(
+
+this.x,
+
+this.y,
+
+this.r,
+
+0,
+
+Math.PI*2
+
+);
+
+  
+
+ctx.fill();
+
+  
+
+ctx.shadowBlur = 0;
+
+}
+
+});
+
+}
+
+}
+
+  
+
+// =================
+
+// PHASE 2
+
+// ICE PILLAR
+
+// =================
+
+  
+
+else if(cycle < 800){
+
+  
+
+if(frame % 100 === 0){
+
+  
+
+let target =
+
+elariaClone || player;
+
+  
+
+let x =
+
+target.x +
+
+(Math.random()-0.5)*180;
+
+  
+
+enemyBullets.push({
+
+  
+
+x:x,
+
+y:-120,
+
+  
+
+w:80,
+
+h:220,
+
+  
+
+vy:10,
+
+dmg:2,
+
+  
+
+update(){
+
+  
+
+this.y += this.vy;
+
+  
+
+if(this.y > canvas.height-220){
+
+screenShake = 15;
+
+}
+
+},
+
+  
+
+draw(){
+
+  
+
+ctx.fillStyle =
+
+"#88e6ff";
+
+  
+
+ctx.shadowColor =
+
+"#aaffff";
+
+  
+
+ctx.shadowBlur = 20;
+
+  
+
+ctx.fillRect(
+
+this.x-this.w/2,
+
+this.y,
+
+this.w,
+
+this.h
+
+);
+
+  
+
+ctx.shadowBlur = 0;
+
+}
+
+});
+
+}
+
+}
+
+  
+
+// =================
+
+// PHASE 3
+
+// ICE WAVE
+
+// =================
+
+  
+
+else{
+
+  
+
+if(frame % 200 === 0){
+
+  
+
+screenShake = 40;
+
+  
+
+for(let i=0;i<30;i++){
+
+  
+
+enemyBullets.push(
+
+  
+
+new Bullet(
+
+boss.x,
+
+boss.y + 60,
+
+  
+
+Math.PI +
+
+(i-15)*0.2,
+
+  
+
+8,
+
+  
+
+"#d9ffff",
+
+  
+
+12,
+
+2
+
+)
+
+);
+
+}
+
+}
+
+}
+
+}
+
+  
+
+// =======================
+
+// VIRELTHA PATTERN
+
+// =======================
+
+  
+
+function spawnPatternVireltha(){
+
+  
+
+let cycle =
+
+frame % 1000;
+
+  
+
+// =================
+
+// ĐỘC TÍM
+
+// =================
+
+  
+
+if(cycle < 350){
+
+  
+
+if(frame % 45 === 0){
+
+  
+
+for(let i=0;i<16;i++){
+
+  
+
+let ang =
+
+i*Math.PI*2/16;
+
+  
+
+let b =
+
+new Bullet(
+
+boss.x,
+
+boss.y,
+
+ang,
+
+3,
+
+"#bb44ff",
+
+11,
+
+1
+
+);
+
+  
+
+b.poison = true;
+
+  
+
+enemyBullets.push(b);
+
+}
+
+}
+
+}
+
+  
+
+// =================
+
+// TIA XANH LÁ
+
+// =================
+
+  
+
+else if(cycle < 700){
+
+  
+
+if(frame%20===0){
+
+  
+
+let x=
+
+Math.random()*canvas.width;
+
+  
+
+enemyBullets.push({
+
+  
+
+x:x,
+
+y:-100,
+
+  
+
+w:22,
+
+h:160,
+
+  
+
+vy:10,
+
+  
+
+paralyze:true,
+
+  
+
+update(){
+
+this.y+=this.vy;
+
+},
+
+  
+
+draw(){
+
+  
+
+ctx.shadowColor =
+
+"#00ff88";
+
+  
+
+ctx.shadowBlur = 20;
+
+  
+
+ctx.fillStyle =
+
+"rgba(0,255,120,0.8)";
+
+  
+
+ctx.fillRect(
+
+this.x-this.w/2,
+
+this.y,
+
+this.w,
+
+this.h
+
+);
+
+  
+
+ctx.shadowBlur = 0;
+
+}
+
+});
+
+  
+
+}
+
+}
+
+  
+
+// =================
+
+// SÓNG TÊ LIỆT
+
+// =================
+
+  
+
+else{
+
+  
+
+if(frame % 30 === 0){
+
+  
+
+for(let i=0;i<28;i++){
+
+  
+
+let ang =
+
+i*Math.PI*2/28;
+
+  
+
+let b =
+
+new Bullet(
+
+boss.x,
+
+boss.y,
+
+ang,
+
+5,
+
+"#66ff99",
+
+8,
+
+1
+
+);
+
+  
+
+b.paralyze = true;
+
+  
+
+enemyBullets.push(b);
+
+}
+
+}
+
+}
+
+}
+
+  
+
+// =======================
+
+// NYXARA PATTERN
+
+// =======================
+
+  
+
+function spawnPatternNyxara(){
+
+  
+
+let cycle =
+
+frame % 1400;
+
+  
+
+// =================
+
+// DARK RAIN
+
+// =================
+
+  
+
+if(cycle < 350){
+
+  
+
+if(frame % 10 === 0){
+
+  
+
+let b =
+
+new Bullet(
+
+Math.random()*canvas.width,
+
+-20,
+
+Math.PI/2,
+
+7,
+
+"#111111",
+
+9,
+
+1
+
+);
+
+  
+
+b.dark = true;
+
+  
+
+enemyBullets.push(b);
+
+}
+
+}
+
+  
+
+// =================
+
+// HỒ BÓNG TỐI
+
+// =================
+
+  
+
+else if(cycle < 700){
+
+  
+
+if(frame % 120 === 0){
+
+  
+
+enemyBullets.push({
+
+  
+
+x: (elariaClone || player).x,
+
+y: (elariaClone || player).y,
+
+  
+
+r: 25,
+
+  
+
+life: 180,
+
+  
+
+// delay 1 giây
+
+delay: 60,
+
+  
+
+active: false,
+
+  
+
+update(){
+
+  
+
+// đếm delay trước
+
+if(this.delay > 0){
+
+  
+
+this.delay--;
+
+  
+
+// hiệu ứng cảnh báo
+
+this.r += 0.15;
+
+  
+
+if(this.delay <= 0){
+
+this.active = true;
+
+}
+
+  
+
+return;
+
+}
+
+  
+
+this.life--;
+
+  
+
+this.r += 1;
+
+  
+
+if(this.life <= 0){
+
+this.dead = true;
+
+}
+
+},
+
+  
+
+draw(){
+
+  
+
+// WARNING trước khi xuất hiện
+
+if(!this.active){
+
+  
+
+ctx.strokeStyle =
+
+"rgba(170,100,255,0.9)";
+
+  
+
+ctx.lineWidth = 4;
+
+  
+
+ctx.shadowColor =
+
+"#aa66ff";
+
+  
+
+ctx.shadowBlur = 20;
+
+  
+
+ctx.beginPath();
+
+  
+
+ctx.arc(
+
+this.x,
+
+this.y,
+
+this.r,
+
+0,
+
+Math.PI*2
+
+);
+
+  
+
+ctx.stroke();
+
+  
+
+ctx.shadowBlur = 0;
+
+  
+
+return;
+
+}
+
+  
+
+// hố thật sự
+
+ctx.fillStyle =
+
+"rgba(0,0,0,0.75)";
+
+  
+
+ctx.shadowColor =
+
+"#5522aa";
+
+  
+
+ctx.shadowBlur = 35;
+
+  
+
+ctx.beginPath();
+
+  
+
+ctx.arc(
+
+this.x,
+
+this.y,
+
+this.r,
+
+0,
+
+Math.PI*2
+
+);
+
+  
+
+ctx.fill();
+
+  
+
+ctx.shadowBlur = 0;
+
+}
+
+});
+
+}
+
+}
+
+  
+
+else if(cycle < 1100){
+
+  
+
+if(frame%50===0){
+
+  
+
+for(let i=0;i<8;i++){
+
+  
+
+let ang=i*Math.PI*2/8;
+
+  
+
+let drop=new Bullet(
+
+boss.x,
+
+boss.y,
+
+ang,
+
+2,
+
+"black",
+
+12,
+
+2
+
+);
+
+  
+
+drop.bounced=false;
+
+  
+
+drop.update=function(){
+
+  
+
+this.x+=this.vx;
+
+this.y+=this.vy;
+
+  
+
+if(!this.bounced){
+
+  
+
+let hit=false;
+
+  
+
+if(this.x<=this.r||this.x>=canvas.width-this.r){
+
+this.vx*=-1;
+
+hit=true;
+
+}
+
+  
+
+if(this.y<=this.r||this.y>=canvas.height-this.r){
+
+this.vy*=-1;
+
+hit=true;
+
+}
+
+  
+
+if(hit){
+
+this.bounced=true;
+
+}
+
+}
+
+};
+
+  
+
+drop.draw=function(){
+
+  
+
+ctx.save();
+
+ctx.translate(this.x,this.y);
+
+  
+
+let ang=Math.atan2(this.vy,this.vx);
+
+ctx.rotate(ang+Math.PI/2);
+
+  
+
+ctx.shadowColor="black";
+
+ctx.shadowBlur=20;
+
+  
+
+ctx.fillStyle="#111";
+
+  
+
+ctx.beginPath();
+
+ctx.moveTo(0,-18);
+
+ctx.quadraticCurveTo(18,-8,12,10);
+
+ctx.lineTo(6,26);
+
+ctx.lineTo(-6,26);
+
+ctx.lineTo(-12,10);
+
+ctx.quadraticCurveTo(-18,-8,0,-18);
+
+ctx.fill();
+
+  
+
+ctx.strokeStyle="#000";
+
+ctx.lineWidth=4;
+
+  
+
+for(let i=-1.5;i<=1.5;i++){
+
+ctx.beginPath();
+
+ctx.moveTo(i*6,24);
+
+ctx.lineTo(i*10,36);
+
+ctx.stroke();
+
+}
+
+  
+
+ctx.fillStyle="red";
+
+ctx.beginPath();
+
+ctx.arc(-5,-2,2,0,Math.PI*2);
+
+ctx.arc(5,-2,2,0,Math.PI*2);
+
+ctx.fill();
+
+  
+
+ctx.restore();
+
+};
+
+  
+
+enemyBullets.push(drop);
+
+}
+
+}
+
+}
+
+  
+
+// =================
+
+// MẤT KIỂM SOÁT
+
+// =================
+
+  
+
+else{
+
+  
+
+darkControl = 30;
+
+  
+
+if(frame % 55 === 0){
+
+  
+
+for(let i=0;i<12;i++){
+
+  
+
+enemyBullets.push(
+
+  
+
+new Bullet(
+
+boss.x,
+
+boss.y,
+
+i*Math.PI*2/12,
+
+6,
+
+"#442266",
+
+12,
+
+1
+
+)
+
+);
+
+}
+
+}
+
+}
+
+}
+
+  
+
+function spawnIceDragonPattern(){
+
+  
+
+let cycle = frame % 900;
+
+  
+
+// PHUN BĂNG
+
+if(cycle < 450){
+
+  
+
+if(frame % 20 === 0){
+
+  
+
+let target =
+
+elariaClone || player;
+
+  
+
+let ang = Math.atan2(
+
+target.y - boss.y,
+
+target.x - boss.x
+
+);
+
+  
+
+for(let i = -2; i <= 2; i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+boss.x,
+
+boss.y,
+
+ang + i * 0.1,
+
+8,
+
+"#99ddff",
+
+10,
+
+1
+
+)
+
+);
+
+}
+
+}
+
+}
+
+  
+
+// QUẬT BĂNG
+
+else{
+
+  
+
+if(frame % 60 === 0){
+
+  
+
+for(let i = 0; i < 14; i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+boss.x,
+
+boss.y,
+
+i * Math.PI * 2 / 14,
+
+6,
+
+"#ccf2ff",
+
+12,
+
+2
+
+)
+
+);
+
+}
+
+  
+
+screenShake = 20;
+
+}
+
+}
+
+}
+
+  
+
+function spawnCryseliaPattern(){
+
+  
+
+let cycle = frame % 1100;
+
+  
+
+// ĐÓNG BĂNG TẦM XA
+
+if(cycle < 400){
+
+  
+
+if(frame % 30 === 0){
+
+  
+
+let target =
+
+elariaClone || player;
+
+  
+
+let x =
+
+target.x +
+
+(Math.random()-0.5)*200;
+
+  
+
+enemyBullets.push({
+
+x: x,
+
+y: -100,
+
+w: 70,
+
+h: 200,
+
+vy: 9,
+
+freeze: true,
+
+  
+
+update(){
+
+this.y += this.vy;
+
+},
+
+  
+
+draw(){
+
+ctx.fillStyle = "#66ccff";
+
+ctx.shadowColor = "#aaddff";
+
+ctx.shadowBlur = 25;
+
+  
+
+ctx.fillRect(
+
+this.x - this.w/2,
+
+this.y,
+
+this.w,
+
+this.h
+
+);
+
+  
+
+ctx.shadowBlur = 0;
+
+}
+
+});
+
+}
+
+}
+
+  
+
+// TINH THỂ BĂNG XOÁY
+
+else if(cycle < 800){
+
+  
+
+if(frame % 25 === 0){
+
+  
+
+for(let i = 0; i < 18; i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+boss.x,
+
+boss.y,
+
+i * Math.PI * 2 / 18 + frame * 0.01,
+
+5,
+
+"#aaffff",
+
+8,
+
+1
+
+)
+
+);
+
+}
+
+}
+
+}
+
+  
+
+// ULTIMATE: BĂNG DIỆN RỘNG
+
+else{
+
+  
+
+if(frame % 120 === 0){
+
+  
+
+screenFlash = 40;
+
+screenShake = 35;
+
+  
+
+for(let i = 0; i < 40; i++){
+
+  
+
+let b = new Bullet(
+
+boss.x,
+
+boss.y,
+
+i * Math.PI * 2 / 40,
+
+7,
+
+"#e6ffff",
+
+14,
+
+9
+
+);
+
+  
+
+b.freeze = true;
+
+enemyBullets.push(b);
+
+  
+
+}
+
+}
+
+}
+
+}
+
+  
+
+function spawnHeroHunterTrio(){
+
+  
+
+let cycle = frame % (boss.hp <= 5000 ? 1200 : 800);
+
+  
+
+// boss đang tấn công
+
+let hunters = [boss, ...trioBoss];
+
+  
+
+let shooter =
+
+hunters[
+
+Math.floor(frame / 180) % hunters.length
+
+];
+
+  
+
+// =====================
+
+// PHASE 1: CROSS FIRE
+
+// =====================
+
+if(cycle < 400){
+
+  
+
+if(frame % 28 === 0){
+
+  
+
+let target =
+
+elariaClone || player;
+
+  
+
+let ang =
+
+Math.atan2(
+
+target.y - shooter.y,
+
+target.x - shooter.x
+
+);
+
+  
+
+for(let i=-2;i<=2;i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+shooter.x,
+
+shooter.y,
+
+ang + i*0.05,
+
+7,
+
+"#ff4444",
+
+7,
+
+1
+
+)
+
+);
+
+}
+
+}
+
+  
+
+if(frame % 150 === 0){
+
+  
+
+let side = Math.floor(Math.random()*4);
+
+  
+
+if(side === 0){
+
+  
+
+for(let i=0;i<8;i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+-20,
+
+i*(canvas.height/8),
+
+0,
+
+3,
+
+"#ffffff",
+
+6,
+
+1
+
+)
+
+);
+
+}
+
+}
+
+  
+
+if(side === 1){
+
+  
+
+for(let i=0;i<8;i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+canvas.width+20,
+
+i*(canvas.height/8),
+
+Math.PI,
+
+3,
+
+"#ffffff",
+
+6,
+
+1
+
+)
+
+);
+
+}
+
+}
+
+  
+
+if(side === 2){
+
+  
+
+for(let i=0;i<8;i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+i*(canvas.width/8),
+
+-20,
+
+Math.PI/2,
+
+3,
+
+"#ffffff",
+
+6,
+
+1
+
+)
+
+);
+
+}
+
+}
+
+  
+
+if(side === 3){
+
+  
+
+for(let i=0;i<8;i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+i*(canvas.width/8),
+
+canvas.height+20,
+
+-Math.PI/2,
+
+3,
+
+"#ffffff",
+
+6,
+
+1
+
+)
+
+);
+
+}
+
+}
+
+}
+
+}
+
+  
+
+// =====================
+
+// PHASE 2: HUNTER RAIN
+
+// =====================
+
+else if(cycle < 800){
+
+  
+
+if(frame % 14 === 0){
+
+  
+
+let target =
+
+elariaClone || player;
+
+  
+
+let ang =
+
+Math.atan2(
+
+target.y - shooter.y,
+
+target.x - shooter.x
+
+);
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+shooter.x,
+
+shooter.y,
+
+ang,
+
+6,
+
+"#ffaa33",
+
+5,
+
+1
+
+)
+
+);
+
+}
+
+  
+
+if(frame % 70 === 0){
+
+  
+
+for(let i=0;i<14;i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+Math.random()*canvas.width,
+
+-20,
+
+Math.PI/2 +
+
+(Math.random()-0.5)*0.4,
+
+5 + Math.random()*3,
+
+"#66ccff",
+
+8,
+
+1
+
+)
+
+);
+
+}
+
+}
+
+}
+
+  
+
+// =====================
+
+// PHASE 3: EXECUTION
+
+// =====================
+
+else if(boss.hp <= 5000){
+
+  
+
+if(frame % 45 === 0){
+
+  
+
+for(let i=0;i<24;i++){
+
+  
+
+let ang =
+
+i*Math.PI*2/24;
+
+  
+
+let spd =
+
+3 + (i%2)*2;
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+shooter.x,
+
+shooter.y,
+
+ang,
+
+spd,
+
+"#ff2222",
+
+8,
+
+2
+
+)
+
+);
+
+}
+
+  
+
+screenShake = 12;
+
+}
+
+  
+
+if(frame % 90 === 0){
+
+  
+
+let target =
+
+elariaClone || player;
+
+  
+
+let ang =
+
+Math.atan2(
+
+target.y - shooter.y,
+
+target.x - shooter.x
+
+);
+
+  
+
+for(let i=-4;i<=4;i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+shooter.x,
+
+shooter.y,
+
+ang + i*0.08,
+
+11,
+
+"#ffffff",
+
+10,
+
+2
+
+)
+
+);
+
+}
+
+}
+
+}
+
+  
+
+if(boss.hp <= 30000 && trioBoss.length === 0){
+
+  
+
+trioBoss.push(
+
+{x:220,y:180},
+
+{x:canvas.width-220,y:180},
+
+{x:canvas.width/2,y:260}
+
+);
+
+}
+
+}
+
+  
+
+function spawnThalvorn(){
+
+  
+
+let cycle = frame % 1200;
+
+  
+
+// =====================
+
+// PHASE 1 - GLITCH SHOT
+
+// =====================
+
+if(cycle < 400){
+
+  
+
+if(frame % 5 === 0){
+
+  
+
+let x = Math.random()*canvas.width;
+
+  
+
+enemyBullets.push({
+
+x:x,
+
+y:-100,
+
+w:20,
+
+h:140,
+
+vy:10,
+
+  
+
+update(){
+
+this.y += this.vy;
+
+this.x += Math.sin(this.y*0.05)*3;
+
+},
+
+  
+
+draw(){
+
+ctx.fillStyle="#aa00ff";
+
+ctx.shadowBlur=25;
+
+ctx.fillRect(this.x,this.y,this.w,this.h);
+
+ctx.shadowBlur=0;
+
+}
+
+});
+
+}
+
+}
+
+  
+
+// =====================
+
+// PHASE 2 - FRACTURE BULLETS
+
+// =====================
+
+else if(cycle < 800){
+
+  
+
+if(frame % 60 === 0){
+
+  
+
+let target =
+
+elariaClone || player;
+
+  
+
+let ang = Math.atan2(
+
+target.y - boss.y,
+
+target.x - boss.x
+
+);
+
+  
+
+let main = new Bullet(
+
+boss.x,
+
+boss.y,
+
+ang,
+
+7,
+
+"#ff00ff",
+
+10,
+
+2
+
+);
+
+  
+
+main.timer = 40;
+
+  
+
+main.update = function(){
+
+  
+
+this.x += this.vx;
+
+this.y += this.vy;
+
+  
+
+this.timer--;
+
+  
+
+if(this.timer <= 0){
+
+  
+
+for(let i=0;i<12;i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+this.x,
+
+this.y,
+
+i*Math.PI*2/12,
+
+6,
+
+"#ffffff",
+
+6,
+
+1
+
+)
+
+);
+
+}
+
+  
+
+this.dead = true;
+
+}
+
+};
+
+  
+
+enemyBullets.push(main);
+
+}
+
+}
+
+  
+
+// =====================
+
+// PHASE 3 - REALITY BREAK
+
+// =====================
+
+else if(cycle < 1000){
+
+  
+
+if(frame % 40 === 0){
+
+  
+
+boss.x = canvas.width/2 + (Math.random()-0.5)*300;
+
+  
+
+for(let i=0;i<30;i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+boss.x,
+
+boss.y,
+
+i*Math.PI*2/30,
+
+5 + Math.random()*2,
+
+"#00ffff",
+
+8,
+
+2
+
+)
+
+);
+
+}
+
+  
+
+screenShake = 20;
+
+}
+
+}
+
+  
+
+// =====================
+
+// PHASE 4 - REWIND ORBIT
+
+// =====================
+
+else if(cycle < 1100){
+
+  
+
+if(frame % 12 === 0){
+
+  
+
+let count = 14;
+
+  
+
+for(let i=0;i<count;i++){
+
+  
+
+let ang = (i * Math.PI*2/count) + frame*0.03;
+
+let r = 120;
+
+  
+
+let b = new Bullet(
+
+boss.x + Math.cos(ang)*r,
+
+boss.y + Math.sin(ang)*r,
+
+ang + Math.PI,
+
+3,
+
+"#ff66ff",
+
+7,
+
+1
+
+);
+
+  
+
+b.centerX = boss.x;
+
+b.centerY = boss.y;
+
+  
+
+b.update = function(){
+
+  
+
+let dx = this.x - this.centerX;
+
+let dy = this.y - this.centerY;
+
+  
+
+let ang = Math.atan2(dy, dx) + 0.06;
+
+let dist = Math.hypot(dx, dy);
+
+  
+
+this.x = this.centerX + Math.cos(ang) * dist;
+
+this.y = this.centerY + Math.sin(ang) * dist;
+
+  
+
+let pa = Math.atan2(player.y - this.y, player.x - this.x);
+
+  
+
+this.x += Math.cos(pa) * 0.4;
+
+this.y += Math.sin(pa) * 0.4;
+
+};
+
+  
+
+enemyBullets.push(b);
+
+}
+
+  
+
+screenShake = 10;
+
+}
+
+}
+
+  
+
+// =====================
+
+// PHASE 5 - CORE BREAK
+
+// =====================
+
+else{
+
+  
+
+if(frame % 28 === 0){
+
+  
+
+boss.x = canvas.width/2 + (Math.random()-0.5)*380;
+
+boss.y = 120 + (Math.random()-0.5)*80;
+
+  
+
+for(let i=0;i<36;i++){
+
+  
+
+let ang = i * Math.PI*2/36;
+
+let spd = 3 + Math.random()*4;
+
+  
+
+let b = new Bullet(
+
+boss.x,
+
+boss.y,
+
+ang,
+
+spd,
+
+"#ffffff",
+
+6,
+
+2
+
+);
+
+  
+
+b.update = function(){
+
+  
+
+this.x += this.vx;
+
+this.y += this.vy;
+
+  
+
+this.vx += Math.sin(frame*0.02)*0.02;
+
+this.vy += Math.cos(frame*0.02)*0.02;
+
+};
+
+  
+
+enemyBullets.push(b);
+
+}
+
+  
+
+for(let i=0;i<12;i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+boss.x,
+
+boss.y,
+
+i*Math.PI*2/12,
+
+8,
+
+"#00ffff",
+
+10,
+
+3
+
+)
+
+);
+
+}
+
+  
+
+screenFlash = 20;
+
+screenShake = 25;
+
+}
+
+}
+
+}
+
+  
+
+function spawnTitanor(){
+
+  
+
+let cycle = frame % 1200;
+
+  
+
+// =====================
+
+// PHASE 1 - IRON FIST
+
+// =====================
+
+  
+
+if(cycle < 400){
+
+  
+
+if(frame % 70 === 0){
+
+  
+
+let ang =
+
+Math.atan2(
+
+(elariaClone ? elariaClone.y : player.y) - boss.y,
+
+(elariaClone ? elariaClone.x : player.x) - boss.x
+
+);
+
+  
+
+enemyBullets.push({
+
+  
+
+x: boss.x,
+
+y: boss.y,
+
+  
+
+vx: Math.cos(ang) * 16,
+
+vy: Math.sin(ang) * 16,
+
+  
+
+r: 55,
+
+dmg: 3,
+
+  
+
+life: 70,
+
+  
+
+update(){
+
+  
+
+this.x += this.vx;
+
+this.y += this.vy;
+
+  
+
+this.life--;
+
+  
+
+if(this.life <= 0){
+
+this.dead = true;
+
+}
+
+},
+
+  
+
+draw(){
+
+  
+
+ctx.fillStyle = "#888";
+
+  
+
+ctx.shadowColor = "#ccc";
+
+ctx.shadowBlur = 30;
+
+  
+
+ctx.beginPath();
+
+  
+
+ctx.arc(
+
+this.x,
+
+this.y,
+
+this.r,
+
+0,
+
+Math.PI*2
+
+);
+
+  
+
+ctx.fill();
+
+  
+
+ctx.shadowBlur = 0;
+
+}
+
+});
+
+  
+
+screenShake = 18;
+
+}
+
+}
+
+  
+
+// =====================
+
+// PHASE 2 - METAL RAIN
+
+// =====================
+
+  
+
+else if(cycle < 800){
+
+  
+
+if(frame % 10 === 0){
+
+  
+
+enemyBullets.push({
+
+  
+
+x: Math.random()*canvas.width,
+
+y: -40,
+
+  
+
+w: 18,
+
+h: 90,
+
+  
+
+vy: 14,
+
+dmg: 1,
+
+  
+
+update(){
+
+this.y += this.vy;
+
+},
+
+  
+
+draw(){
+
+  
+
+ctx.fillStyle = "#bbbbbb";
+
+  
+
+ctx.shadowColor = "#ffffff";
+
+ctx.shadowBlur = 18;
+
+  
+
+ctx.fillRect(
+
+this.x,
+
+this.y,
+
+this.w,
+
+this.h
+
+);
+
+  
+
+ctx.shadowBlur = 0;
+
+}
+
+});
+
+}
+
+}
+
+  
+
+// =====================
+
+// PHASE 3 - IRON BURST
+
+// =====================
+
+  
+
+else{
+
+  
+
+if(frame % 45 === 0){
+
+  
+
+for(let i=0;i<28;i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+boss.x,
+
+boss.y,
+
+i*Math.PI*2/28,
+
+7,
+
+"#999999",
+
+10,
+
+2
+
+)
+
+);
+
+}
+
+  
+
+screenShake = 22;
+
+}
+
+}
+
+}
+
+  
+
+function spawnNoctyros(){
+
+  
+
+let cycle = frame % (boss.hp <= 5000 ? 1600 : 1300);
+
+  
+
+// =====================
+
+// PHASE 1 - NIGHT ORBS
+
+// =====================
+
+  
+
+if(cycle < 450){
+
+  
+
+if(frame % 35 === 0){
+
+  
+
+for(let i=0;i<14;i++){
+
+  
+
+let ang =
+
+i*Math.PI*2/14;
+
+  
+
+let b = new Bullet(
+
+boss.x,
+
+boss.y,
+
+ang,
+
+4,
+
+"#440088",
+
+11,
+
+1
+
+);
+
+  
+
+b.update = function(){
+
+  
+
+this.x += this.vx;
+
+this.y += this.vy;
+
+  
+
+this.vx *= 1.01;
+
+this.vy *= 1.01;
+
+};
+
+  
+
+enemyBullets.push(b);
+
+}
+
+}
+
+}
+
+  
+
+// =====================
+
+// PHASE 2 - SHADOW BEAM
+
+// =====================
+
+  
+
+else if(cycle < 900){
+
+  
+
+if(frame % 30 === 0){
+
+  
+
+let target =
+
+elariaClone || player;
+
+  
+
+let x =
+
+target.x +
+
+(Math.random()-0.5)*150;
+
+  
+
+enemyBullets.push({
+
+  
+
+x:x,
+
+y:-100,
+
+  
+
+w:40,
+
+h:220,
+
+  
+
+vy:12,
+
+dmg:2,
+
+  
+
+update(){
+
+  
+
+this.y += this.vy;
+
+},
+
+  
+
+draw(){
+
+  
+
+ctx.fillStyle =
+
+"rgba(80,0,120,0.8)";
+
+  
+
+ctx.shadowColor =
+
+"#bb66ff";
+
+  
+
+ctx.shadowBlur = 25;
+
+  
+
+ctx.fillRect(
+
+this.x-this.w/2,
+
+this.y,
+
+this.w,
+
+this.h
+
+);
+
+  
+
+ctx.shadowBlur = 0;
+
+}
+
+});
+
+}
+
+}
+
+  
+
+// =====================
+
+// PHASE 3 - NIGHTMARE
+
+// =====================
+
+  
+
+else if(cycle < 1300){
+
+  
+
+if(frame % 55 === 0){
+
+  
+
+for(let i=0;i<22;i++){
+
+  
+
+let ang =
+
+i*Math.PI*2/22;
+
+  
+
+let b = new Bullet(
+
+boss.x,
+
+boss.y,
+
+ang,
+
+3,
+
+"#220033",
+
+12,
+
+2
+
+);
+
+  
+
+b.wave = frame;
+
+  
+
+b.update = function(){
+
+  
+
+this.x += this.vx;
+
+this.y += this.vy;
+
+  
+
+let a =
+
+Math.atan2(this.vy,this.vx);
+
+  
+
+this.x +=
+
+Math.cos(a + Math.PI/2)
+
+*
+
+Math.sin((frame-this.wave)*0.1)
+
+* 3;
+
+};
+
+  
+
+enemyBullets.push(b);
+
+}
+
+}
+
+}
+
+// =====================
+
+// PHASE 4 - BLOODY NIGHTMARE
+
+// =====================
+
+  
+
+else if(cycle < 1600 && boss.hp <= 5000){
+
+  
+
+// nhịp nhanh chậm toàn màn
+
+let pulse =
+
+5 +
+
+Math.sin(frame * 0.18) * 4;
+
+  
+
+// đổi tốc độ toàn bộ đạn đỏ
+
+enemyBullets.forEach(b=>{
+
+  
+
+if(b.bloodWave){
+
+  
+
+b.vx =
+
+Math.cos(b.ang) * pulse;
+
+  
+
+b.vy =
+
+Math.sin(b.ang) * pulse;
+
+}
+
+});
+
+  
+
+if(frame % 4 === 0){
+
+  
+
+let rot = frame * 1;
+
+  
+
+for(let s=0;s<8;s++){
+
+  
+
+let ang =
+
+rot +
+
+s * Math.PI/2;
+
+  
+
+let b = new Bullet(
+
+boss.x,
+
+boss.y,
+
+ang,
+
+pulse,
+
+"#660000",
+
+9,
+
+2
+
+);
+
+  
+
+b.ang = ang;
+
+b.bloodWave = true;
+
+  
+
+enemyBullets.push(b);
+
+}
+
+}
+
+}
+
+}
+
+  
+
+function spawnVeilith(){
+
+  
+
+let cycle = frame % 1200;
+
+  
+
+// =========================
+
+// PATTERN 1: ILLUSION ORBS
+
+// (ảo ảnh + lệch vị trí)
+
+// =========================
+
+if(cycle < 300){
+
+  
+
+if(frame % 35 === 0){
+
+  
+
+for(let i=0;i<6;i++){
+
+  
+
+let offsetX = (Math.random()-0.5)*220;
+
+let offsetY = (Math.random()-0.5)*220;
+
+  
+
+let tx = (elariaClone || player).x + offsetX;
+
+let ty = (elariaClone || player).y + offsetY;
+
+  
+
+enemyBullets.push({
+
+x: boss.x,
+
+y: boss.y,
+
+tx, ty,
+
+t: 0,
+
+  
+
+update(){
+
+this.x += (this.tx - this.x) * 0.06;
+
+this.y += (this.ty - this.y) * 0.06;
+
+},
+
+  
+
+draw(){
+
+ctx.fillStyle = "rgba(200,120,255,0.85)";
+
+ctx.shadowColor = "#bb55ff";
+
+ctx.shadowBlur = 20;
+
+  
+
+ctx.beginPath();
+
+ctx.arc(this.x,this.y,10,0,Math.PI*2);
+
+ctx.fill();
+
+}
+
+});
+
+}
+
+}
+
+}
+
+  
+
+// =========================
+
+// PATTERN 2: TELEKINESIS FIELD
+
+// (đẩy player + xoay hướng)
+
+// =========================
+
+else if(cycle < 600){
+
+  
+
+if(frame % 70 === 0){
+
+  
+
+let ang = Math.atan2(
+
+player.y - boss.y,
+
+player.x - boss.x
+
+);
+
+  
+
+// đẩy mạnh + lệch nhẹ
+
+player.x += Math.cos(ang) * 80 + (Math.random()-0.5)*30;
+
+player.y += Math.sin(ang) * 80 + (Math.random()-0.5)*30;
+
+  
+
+// thêm hiệu ứng rung
+
+screenShake = 18;
+
+}
+
+  
+
+// thêm đạn xoáy để ép di chuyển
+
+if(frame % 12 === 0){
+
+  
+
+for(let i=0;i<4;i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+boss.x,
+
+boss.y,
+
+i*Math.PI/2 + frame*0.03,
+
+5,
+
+"#cc66ff",
+
+8,
+
+1
+
+)
+
+);
+
+}
+
+}
+
+}
+
+  
+
+// =========================
+
+// PATTERN 3: PHANTOM BLADES
+
+// (xoay + áp sát)
+
+// =========================
+
+else if(cycle < 900){
+
+  
+
+if(frame % 22 === 0){
+
+  
+
+let baseAng = frame * 0.02;
+
+  
+
+for(let i=0;i<12;i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+boss.x,
+
+boss.y,
+
+baseAng + i*Math.PI*2/12,
+
+6.5,
+
+"#aa44ff",
+
+9,
+
+1
+
+)
+
+);
+
+}
+
+}
+
+  
+
+// đao ảo bay ngược
+
+if(frame % 80 === 0){
+
+  
+
+let ang = Math.atan2(
+
+(elariaClone || player).y - boss.y,
+
+(elariaClone || player).x - boss.x
+
+);
+
+  
+
+for(let i=-2;i<=2;i++){
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+boss.x,
+
+boss.y,
+
+ang + i*0.15,
+
+9,
+
+"#ff88ff",
+
+10,
+
+1
+
+)
+
+);
+
+}
+
+}
+
+}
+
+  
+
+// =========================
+
+// PATTERN 4: REALITY BREAK
+
+// (dịch chuyển + spam hỗn loạn)
+
+// =========================
+
+else{
+
+  
+
+if(bossFreeze <= 0){
+
+// teleport boss
+
+boss.x = canvas.width / 2;
+
+boss.y = canvas.height / 2;
+
+}
+
+  
+
+if(frame % 60 === 0){
+
+  
+
+// burst ảo ảnh
+
+for(let i=0;i<20;i++){
+
+  
+
+let ang = i*Math.PI*2/20;
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+boss.x,
+
+boss.y,
+
+ang,
+
+7 + Math.random()*3,
+
+"#ffffff",
+
+6,
+
+1
+
+)
+
+);
+
+}
+
+  
+
+screenFlash = 15;
+
+screenShake = 22;
+
+}
+
+  
+
+// fake clone bullets
+
+if(frame % 18 === 0){
+
+  
+
+for(let i=0;i<3;i++){
+
+  
+
+enemyBullets.push({
+
+x: boss.x + (Math.random()-0.5)*200,
+
+y: boss.y + (Math.random()-0.5)*200,
+
+w: 18,
+
+h: 140,
+
+vy: 10,
+
+  
+
+update(){
+
+this.y += this.vy;
+
+this.x += Math.sin(this.y*0.05)*2;
+
+},
+
+  
+
+draw(){
+
+ctx.fillStyle = "rgba(180,100,255,0.7)";
+
+ctx.shadowColor = "#bb66ff";
+
+ctx.shadowBlur = 20;
+
+ctx.fillRect(this.x - this.w/2, this.y, this.w, this.h);
+
+ctx.shadowBlur = 0;
+
+}
+
+});
+
+}
+
+}
+
+}
+
+}
+
+  
+
+function spawnObsidrax(){
+
+  
+
+let cycle = frame % 1100;
+
+  
+
+// =====================
+
+// PHASE 1: LAVA PUSH (đẩy văng + áp lực nổ)
+
+// =====================
+
+if(cycle < 350){
+
+  
+
+// 🔥 đẩy player ra xa boss liên tục
+
+let angPush = Math.atan2(player.y - boss.y, player.x - boss.x);
+
+player.x += Math.cos(angPush) * 1.2;
+
+player.y += Math.sin(angPush) * 1.2;
+
+  
+
+if(frame % 20 === 0){
+
+screenShake = 6;
+
+}
+
+  
+
+if(frame % 45 === 0){
+
+  
+
+let target =
+
+elariaClone || player;
+
+  
+
+let ang = Math.atan2(
+
+target.y - boss.y,
+
+target.x - boss.x
+
+);
+
+  
+
+enemyBullets.push({
+
+x: boss.x,
+
+y: boss.y,
+
+vx: Math.cos(ang)*11,
+
+vy: Math.sin(ang)*11,
+
+r: 16,
+
+explodeTimer: 30,
+
+  
+
+update(){
+
+this.x += this.vx;
+
+this.y += this.vy;
+
+  
+
+this.explodeTimer--;
+
+  
+
+// lực đẩy ngược (tăng áp lực di chuyển)
+
+let repulse = Math.atan2(this.y - boss.y, this.x - boss.x);
+
+this.vx += Math.cos(repulse) * 0.05;
+this.vy += Math.sin(repulse) * 0.05;
+
+// =========================
+// STOP AT EDGE (FREEZE POSITION)
+// =========================
+if(this.x <= 0){
+    this.x = 0;
+    this.vx = 0;
+}
+
+if(this.x >= canvas.width){
+    this.x = canvas.width;
+    this.vx = 0;
+}
+
+if(this.y <= 0){
+    this.y = 0;
+    this.vy = 0;
+}
+
+if(this.y >= canvas.height){
+    this.y = canvas.height;
+    this.vy = 0;
+}
+
+  
+
+if(this.explodeTimer <= 0){
+
+  
+
+// 💥 nổ dạng vòng đẩy
+
+for(let i=0;i<10;i++){
+
+  
+
+let a = i*Math.PI*2/10;
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+this.x,
+
+this.y,
+
+a,
+
+7,
+
+"#ff3300",
+
+8,
+
+2
+
+)
+
+);
+
+}
+
+  
+
+this.dead = true;
+
+}
+
+},
+
+  
+
+draw(){
+
+ctx.fillStyle = "#ff2200";
+
+ctx.shadowColor = "#ff5500";
+
+ctx.shadowBlur = 25;
+
+  
+
+ctx.beginPath();
+
+ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+
+ctx.fill();
+
+}
+
+});
+
+}
+
+}
+
+  
+
+// =====================
+
+// PHASE 2: MAGMA FLOOR (địa hình nguy hiểm)
+
+// =====================
+
+else if(cycle >= 410 && cycle < 750){
+
+  
+
+if(frame % 10 === 0){
+
+  
+
+let x = Math.random()*canvas.width;
+
+  
+
+enemyBullets.push({
+
+x,
+
+y: canvas.height + 60,
+
+w: 40,
+
+h: 160,
+
+vy: -10,
+
+  
+
+update(){
+
+this.y += this.vy;
+
+  
+
+if(Math.abs(this.y - player.y) < 120){
+
+}
+
+},
+
+  
+
+draw(){
+
+ctx.fillStyle = "#ff3300";
+
+ctx.shadowColor = "#ff6600";
+
+ctx.shadowBlur = 30;
+
+ctx.fillRect(this.x, this.y, this.w, this.h);
+
+}
+
+});
+
+}
+
+}
+
+  
+
+// =====================
+
+// PHASE 3: CORE ERUPTION (bùng nổ + xoáy map)
+
+// =====================
+
+else if(cycle >= 750 && cycle < 1100){
+
+  
+
+if(frame % 40 === 0){
+
+  
+
+for(let i=0;i<20;i++){
+
+  
+
+let ang = i*Math.PI*2/20 + frame*0.05;
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+boss.x,
+
+boss.y,
+
+ang,
+
+8 + Math.random()*3,
+
+"#ff1100",
+
+10,
+
+2
+
+)
+
+);
+
+}
+
+  
+
+screenShake = 30;
+
+screenFlash = 18;
+
+}
+
+  
+
+if(frame % 14 === 0){
+
+  
+
+enemyBullets.push({
+
+x: Math.random()*canvas.width,
+
+y: -40,
+
+vy: 14,
+
+w: 20,
+
+h: 100,
+
+  
+
+update(){
+
+this.y += this.vy;
+
+},
+
+  
+
+draw(){
+
+ctx.fillStyle = "#ff4400";
+
+ctx.shadowBlur = 25;
+
+ctx.fillRect(this.x,this.y,this.w,this.h);
+
+}
+
+});
+
+}
+
+}
+
+}
+
+  
+
+// ========================================
+
+// CHAPTER 7
+
+// STAGE 1: HAKAZEL & BAKTIE
+
+// STAGE 2: ZEPHIRA
+
+// ========================================
+
+  
+
+  
+
+// ========================================
+
+// STAGE 1 -- HAKAZEL & BAKTIE
+
+// hỗn loạn + quấy rối
+
+// ========================================
+
+  
+
+function spawnHakazelBaktie(){
+
+  
+
+let cycle = frame % (boss.hp <= 2000 ? 1200 : 750);
+
+  
+
+// ====================================
+
+// PATTERN 1 -- CHAOS SHARDS
+
+// ====================================
+
+if(cycle < 350){
+
+  
+
+if(frame % 14 === 0){
+
+  
+
+for(let i=0;i<5;i++){
+
+  
+
+let ang = Math.random() * Math.PI*2;
+
+  
+
+enemyBullets.push({
+
+x: boss.x,
+
+y: boss.y,
+
+vx: Math.cos(ang) * (4 + Math.random()*5),
+
+vy: Math.sin(ang) * (4 + Math.random()*5),
+
+r: 7 + Math.random()*6,
+
+  
+
+update(){
+
+  
+
+this.x += this.vx;
+
+this.y += this.vy;
+
+  
+
+// hỗn loạn hướng
+
+this.vx += (Math.random()-0.5)*0.25;
+
+this.vy += (Math.random()-0.5)*0.25;
+
+},
+
+  
+
+draw(){
+
+  
+
+ctx.fillStyle = "#ff00aa";
+
+ctx.shadowColor = "#aa00ff";
+
+ctx.shadowBlur = 20;
+
+  
+
+ctx.beginPath();
+
+ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+
+ctx.fill();
+
+}
+
+});
+
+}
+
+}
+
+  
+
+// quấy rối camera
+
+if(frame % 40 === 0){
+
+screenShake = 10;
+
+}
+
+}
+
+  
+
+// ====================================
+
+// PATTERN 2 -- DISTORT LINES
+
+// ====================================
+
+else if(cycle < 750){
+
+  
+
+if(frame % 20 === 0){
+
+  
+
+let side = Math.floor(Math.random()*4);
+
+  
+
+let x,y,vx,vy;
+
+  
+
+if(side === 0){
+
+x = -40;
+
+y = Math.random()*canvas.height;
+
+vx = 12;
+
+vy = 0;
+
+}
+
+  
+
+if(side === 1){
+
+x = canvas.width + 40;
+
+y = Math.random()*canvas.height;
+
+vx = -12;
+
+vy = 0;
+
+}
+
+  
+
+if(side === 2){
+
+x = Math.random()*canvas.width;
+
+y = -40;
+
+vx = 0;
+
+vy = 12;
+
+}
+
+  
+
+if(side === 3){
+
+x = Math.random()*canvas.width;
+
+y = canvas.height + 40;
+
+vx = 0;
+
+vy = -12;
+
+}
+
+  
+
+enemyBullets.push({
+
+  
+
+x,y,vx,vy,
+
+w: 20,
+
+h: 90,
+
+  
+
+update(){
+
+  
+
+this.x += this.vx;
+
+this.y += this.vy;
+
+  
+
+// HIT => displacement
+
+if(
+
+player.x > this.x-this.w/2 &&
+
+player.x < this.x+this.w/2 &&
+
+player.y > this.y-this.h/2 &&
+
+player.y < this.y+this.h/2
+
+){
+
+  
+
+player.x += (Math.random()-0.5)*120;
+
+player.y += (Math.random()-0.5)*120;
+
+  
+
+screenShake = 18;
+
+}
+
+},
+
+  
+
+draw(){
+
+  
+
+ctx.fillStyle = "rgba(255,0,180,0.7)";
+
+ctx.shadowColor = "#ff00ff";
+
+ctx.shadowBlur = 25;
+
+  
+
+ctx.fillRect(
+
+this.x-this.w/2,
+
+this.y-this.h/2,
+
+this.w,
+
+this.h
+
+);
+
+}
+
+});
+
+}
+
+}
+
+  
+
+// ====================================
+
+// PATTERN 3 -- MADNESS FIELD
+
+// ====================================
+
+else if(cycle < 1200 && boss.hp <= 2000){
+
+  
+
+boss.x = canvas.width/2 + (Math.random()-0.5)*450;
+
+boss.y = 120 + (Math.random()-0.5)*250;
+
+  
+
+if(frame % 45 === 0){
+
+  
+
+for(let i=0;i<28;i++){
+
+  
+
+let ang = i*Math.PI*2/28;
+
+  
+
+enemyBullets.push(
+
+new Bullet(
+
+boss.x,
+
+boss.y,
+
+ang + Math.sin(frame*0.03),
+
+5 + Math.random()*5,
+
+"#ff44ff",
+
+10,
+
+1
+
+)
+
+);
+
+}
+
+  
+
+screenFlash = 12;
+
+screenShake = 22;
+
+}
+
+  
+
+if(frame % 9 === 0){
+
+  
+
+enemyBullets.push({
+
+  
+
+x: Math.random()*canvas.width,
+
+y: -20,
+
+vy: 10 + Math.random()*8,
+
+r: 12,
+
+  
+
+update(){
+
+  
+
+this.y += this.vy;
+
+this.x += Math.sin(this.y*0.03)*6;
+
+},
+
+  
+
+draw(){
+
+  
+
+ctx.fillStyle = "#aa00ff";
+
+ctx.shadowBlur = 25;
+
+  
+
+ctx.beginPath();
+
+ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+
+ctx.fill();
+
+}
+
+});
+
+}
+
+}
+
+}
+
+  
+
+  
+
+  
+
+// ========================================
+
+// STAGE 2 -- ZEPHIRA
+
+// bão nhỏ + lốc xoáy nhỏ
+
+// ========================================
+
+  
+
+function spawnZephira(){
+
+  
+
+let cycle = frame % 1200;
+
+  
+
+// ====================================
+
+// PATTERN 1 -- MINI TORNADO
+
+// ====================================
+
+if(cycle < 400){
+
+  
+
+if(frame % 40 === 0){
+
+  
+
+let tx = Math.random()*canvas.width;
+
+  
+
+enemyBullets.push({
+
+  
+
+x: tx,
+
+y: -100,
+
+vy: 4,
+
+rot: 0,
+
+  
+
+update(){
+
+  
+
+this.y += this.vy;
+
+this.rot += 0.2;
+
+  
+
+// hút nhẹ player
+
+let ang = Math.atan2(
+
+this.y - player.y,
+
+this.x - player.x
+
+);
+
+  
+
+player.x += Math.cos(ang)*0.25;
+
+player.y += Math.sin(ang)*0.25;
+
+},
+
+  
+
+draw(){
+
+  
+
+ctx.save();
+
+  
+
+ctx.translate(this.x,this.y);
+
+ctx.rotate(this.rot);
+
+  
+
+for(let i=0;i<6;i++){
+
+  
+
+ctx.strokeStyle = "rgba(180,220,255,0.7)";
+
+ctx.lineWidth = 4;
+
+  
+
+ctx.beginPath();
+
+ctx.arc(0,i*18,30+i*5,0,Math.PI*1.5);
+
+ctx.stroke();
+
+}
+
+  
+
+ctx.restore();
+
+}
+
+});
+
+}
+
+}
+
+  
+
+// ====================================
+
+// PATTERN 2 -- STORM RAIN
+
+// ====================================
+
+else if(cycle < 800){
+
+  
+
+if(frame % 4 === 0){
+
+  
+
+enemyBullets.push({
+
+  
+
+x: Math.random()*canvas.width,
+
+y: -20,
+
+vy: 18,
+
+w: 6,
+
+h: 60,
+
+  
+
+update(){
+
+this.y += this.vy;
+
+},
+
+  
+
+draw(){
+
+  
+
+ctx.fillStyle = "#88ccff";
+
+ctx.shadowColor = "#aaddff";
+
+ctx.shadowBlur = 15;
+
+  
+
+ctx.fillRect(this.x,this.y,this.w,this.h);
+
+}
+
+});
+
+}
+
+  
+
+if(frame % 50 === 0){
+
+  
+
+screenFlash = 8;
+
+}
+
+}
+
+  
+
+// ====================================
+
+// PATTERN 3 -- CYCLONE CORE
+
+// ====================================
+
+else{
+
+  
+
+if(frame % 60 === 0){
+
+  
+
+boss.x = canvas.width/2 + (Math.random()-0.5)*350;
+
+boss.y = 120 + (Math.random()-0.5)*160;
+
+  
+
+for(let i=0;i<32;i++){
+
+  
+
+let ang = i*Math.PI*2/32;
+
+  
+
+enemyBullets.push({
+
+x: boss.x,
+
+y: boss.y,
+
+ang,
+
+spd: 4 + Math.random()*4,
+
+r: 9,
+
+  
+
+update(){
+
+  
+
+this.ang += 0.04;
+
+  
+
+this.x += Math.cos(this.ang)*this.spd;
+
+this.y += Math.sin(this.ang)*this.spd;
+
+},
+
+  
+
+draw(){
+
+  
+
+ctx.fillStyle = "#ccf5ff";
+
+ctx.shadowColor = "#88ddff";
+
+ctx.shadowBlur = 20;
+
+  
+
+ctx.beginPath();
+
+ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+
+ctx.fill();
+
+}
+
+});
+
+}
+
+  
+
+screenShake = 18;
+
+}
+
+}
+
+}
+
+  
+
+// ========================================
+
+// CHAPTER 8
+
+// STAGE 1:
+
+// VEILITH + CRYSELIA + ZEPHIRA
+
+//
+
+// STAGE 2:
+
+// THALVORN TRUE
+
+// ========================================
+
+  
+
+  
+
+  
+
+// ========================================
+
+// STAGE 1 -- TRINITY OF CHAOS
+
+// Veilith = main boss
+
+// Cryselia + Zephira = clones
+
+// TOTAL 6 PATTERNS
+
+// ========================================
+
+function spawnChapter8Stage1(){
+
+    let cycle = frame % 1800;
+    // ====================================
+    // PATTERN 1 -- VEILITH / REALITY ORBS
+    // ====================================
+    if(cycle < 300){
+        if(frame % 20 === 0){
+            for(let i=0;i<6;i++){
+                enemyBullets.push({
+                    x: boss.x,
+                    y: boss.y,
+                    vx: Math.cos(i*Math.PI*2/6)*6,
+                    vy: Math.sin(i*Math.PI*2/6)*6,
+                    size: 28,
+
+                    update(){
+                        this.x += this.vx;
+                        this.y += this.vy;
+                    },
+
+                    draw(){
+                        ctx.fillStyle = "#cc66ff";
+                        ctx.shadowColor = "#bb55ff";
+                        ctx.shadowBlur = 25;
+                        ctx.fillRect(this.x-this.size/2, this.y-this.size/2, this.size, this.size);
+                    }
+                });
+            }
+        }
+    }
+
+    // ====================================
+    // PATTERN 2 -- VEILITH / VOID DISTORT
+    // ====================================
+    else if(cycle < 600){
+
+        if(frame % 70 === 0){
+
+            player.x += (Math.random()-0.5)*180;
+            player.y += (Math.random()-0.5)*180;
+
+            screenShake = 20;
+        }
+
+        if(frame % 14 === 0){
+            // Ưu tiên aim Elaria Clone nếu có, không thì aim Player
+            let target = elariaClone || player;
+            
+            let ang = Math.atan2(
+                target.y - boss.y,
+                target.x - boss.x
+            );
+            
+            enemyBullets.push(
+                new Bullet(
+                    boss.x,
+                    boss.y,
+                    ang,
+                    8,
+                    "#ffffff",
+                    10,
+                    1
+                )
+            );
+        }
+    }
+    // ====================================
+    // PATTERN 3 -- CRYSELIA / ICE MIRRORS
+    // ====================================
+    else if(cycle < 900){
+        if(frame % 18 === 0 && cryselia && cryselia.length > 0){
+            let cry = cryselia[0];
+            for(let i=0;i<8;i++){
+                let ang = i*Math.PI*2/8;
+                enemyBullets.push({
+                    x: cry.x,
+                    y: cry.y,
+                    vx: Math.cos(ang)*5,
+                    vy: Math.sin(ang)*5,
+                    r: 10,
+
+                    update(){
+                        this.x += this.vx;
+                        this.y += this.vy;
+                        this.vx += Math.sin(frame*0.03)*0.04;
+                        this.vy += Math.cos(frame*0.03)*0.04;
+                    },
+
+                    draw(){
+                        ctx.fillStyle = "#99ffff";
+                        ctx.shadowColor = "#00ffff";
+                        ctx.shadowBlur = 20;
+                        ctx.beginPath();
+                        ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+                        ctx.fill();
+                    }
+                });
+            }
+        }
+    }
+    // ====================================
+    // PATTERN 4 -- CRYSELIA / FROZEN WALL
+    // ====================================
+    else if(cycle < 1200){
+        if(frame % 25 === 0){
+            enemyBullets.push({
+                x: Math.random()*canvas.width,
+                y: -100,
+                vy: 8,
+                w: 60,
+                h: 220,
+
+                update(){
+                    this.y += this.vy;
+                },
+
+                draw(){
+                    ctx.fillStyle = "rgba(180,255,255,0.7)";
+                    ctx.shadowColor = "#88ffff";
+                    ctx.shadowBlur = 30;
+                    ctx.fillRect(this.x,this.y,this.w,this.h);
+                }
+            });
+        }
+    }
+
+    // ====================================
+    // PATTERN 5 -- ZEPHIRA / MINI STORMS
+    // ====================================
+    else if(cycle < 1500){
+        if(frame % 45 === 0 && zephira && zephira.length > 0){
+            let zep = zephira[0];
+            enemyBullets.push({
+                x: zep.x,
+                y: zep.y,
+                r: 20,
+                angle: 0,
+
+                update(){
+                    this.angle += 0.15;
+                    this.x += Math.cos(this.angle)*5;
+                    this.y += Math.sin(this.angle)*5;
+                },
+
+                draw(){
+                    ctx.strokeStyle = "#66ccff";
+                    ctx.lineWidth = 6;
+                    ctx.shadowColor = "#66ffff";
+                    ctx.shadowBlur = 25;
+                    ctx.beginPath();
+                    ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+                    ctx.stroke();
+                }
+            });
+        }
+    }
+    // ====================================
+    // PATTERN 6 -- ZEPHIRA / TORNADO RAIN
+    // ====================================
+    else{
+        if(frame % 10 === 0){
+            enemyBullets.push({
+                x: Math.random()*canvas.width,
+                y: -50,
+                vy: 13,
+                w: 18,
+                h: 100,
+                dmg: 1,
+
+                update(){
+                    this.y += this.vy;
+                },
+
+                draw(){
+                    ctx.fillStyle = "#88ddff";
+                    ctx.shadowColor = "#66ffff";
+                    ctx.shadowBlur = 20;
+                    ctx.fillRect(this.x, this.y, this.w, this.h);
+                }
+            });
+        }
+    }
+    // Phần clone giữ nguyên như cũ (không sửa)
+    if(boss.hp <= 30000 && cryselia.length === 0){
+        cryselia.push({x:220,y:180});
+    }
+    if(boss.hp <= 30000 && zephira.length === 0){
+        zephira.push({x:canvas.width-220,y:180});
+    }
+}
+
+function spawnThalvornTrue(){
+
+    let cycle = frame % 4000;
+
+    if(frame % 60 === 0 && ossivar.length > 0){
+        let o = ossivar[0];
+        for(let i = 0; i < 12; i++){
+            let ang = i * Math.PI * 2 / 12;
+            enemyBullets.push(new Bullet(
+                o.x, o.y,
+                ang,
+                6,
+                "#8800aa",
+                10,
+                1
+            ));
+        }
+    }
+    let target = elariaClone || player;
+
+    // =========================
+    // PASSIVE REGEN (NO HIT)
+    // =========================
+    if(!window.lastBossHitTime){
+        window.lastBossHitTime = frame;
+    }
+
+    if(frame - window.lastBossHitTime > 60){
+        boss.hp += 1;
+
+        if(boss.hp > boss.maxHp){
+            boss.hp = boss.maxHp;
+        }
+    }
+
+    // =========================
+    // 1. CHAOS WAVE
+    // =========================
+    if(cycle < 200){
+
+        if(frame % 10 === 0){
+
+            for(let i=0;i<18;i++){
+
+                let ang = i * Math.PI * 2 / 18;
+
+                enemyBullets.push(
+                    new Bullet(boss.x, boss.y, ang, 7, "#ffffff", 8, 2)
+                );
+            }
+        }
+    }
+
+    // =========================
+    // 2. GRAVITY PUSH
+    // =========================
+else if(cycle < 400){
+
+    let ang = Math.atan2(target.y - boss.y, target.x - boss.x);
+
+    target.x += Math.cos(ang) * 2;
+    target.y += Math.sin(ang) * 2;
+
+    // =========================
+    // STOP PUSH AT SCREEN EDGE
+    // =========================
+    if(target.x < 0) target.x = 0;
+    if(target.y < 0) target.y = 0;
+
+    if(target.x > canvas.width) target.x = canvas.width;
+    if(target.y > canvas.height) target.y = canvas.height;
+
+    if(frame % 20 === 0){
+
+        enemyBullets.push(
+            new Bullet(boss.x, boss.y, ang, 10, "#ff4444", 10, 2)
+        );
+    }
+}
+
+    // =========================
+    // 3. HOT / COLD SWAP
+    // =========================
+    else if(cycle < 600){
+
+        if(frame % 80 < 40){
+
+            player.spd = 3;
+
+            if(frame % 10 === 0){
+                for(let i=0;i<8;i++){
+                    enemyBullets.push(
+                        new Bullet(boss.x, boss.y, i*Math.PI*2/8, 5, "#88ffff", 12, 2)
+                    );
+                }
+            }
+        }
+        else{
+
+            player.spd = 8;
+
+            if(frame % 8 === 0){
+                enemyBullets.push(
+                    new Bullet(boss.x, boss.y, Math.random()*Math.PI*2, 11, "#ff5500", 10, 2)
+                );
+            }
+        }
+    }
+
+    // =========================
+    // 4. LIFE / DEATH WAVE MARK
+    // =========================
+    else if(cycle < 800){
+
+        boss.hp += 1;
+
+        if(boss.hp > boss.maxHp){
+            boss.hp = boss.maxHp;
+        }
+
+        if(frame % 45 === 0){
+
+            let wave = {
+                x: boss.x,
+                y: boss.y,
+                r: 10,
+                speed: 25,
+                dead: false,
+
+                update(){
+
+                    this.r += this.speed;
+
+                    let dx = target.x - this.x;
+                    let dy = target.y - this.y;
+
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+
+                    if(dist < this.r){
+
+                        target.x += (dx > 0 ? 1 : -1) * 60;
+                        target.y += (dy > 0 ? 1 : -1) * 60;
+
+                        target.mark = (target.mark || 0) + 1;
+
+                        screenShake = 10;
+                    }
+
+                    if(this.r > 400){
+                        this.dead = true;
+                    }
+                },
+
+                draw(){
+
+                    ctx.strokeStyle = "#ff0000";
+                    ctx.lineWidth = 10;
+
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+                    ctx.stroke();
+                }
+            };
+
+            enemyBullets.push(wave);
+        }
+    }
+
+    // =========================
+    // 5. WAVE COLLAPSE
+    // =========================
+    else if(cycle < 1000){
+
+        if(frame % 12 === 0){
+
+            enemyBullets.push({
+                x: -100,
+                y: Math.random()*canvas.height,
+                vx: 16,
+                w: 200,
+                h: 40,
+
+                update(){
+                    this.x += this.vx;
+                },
+
+                draw(){
+                    ctx.fillStyle = "rgba(255,255,255,0.7)";
+                    ctx.fillRect(this.x, this.y, this.w, this.h);
+                }
+            });
+        }
+    }
+
+    // =========================
+    // 6. LIGHT / DARK
+    // =========================
+    else if(cycle < 1200){
+
+        if(frame % 50 < 25){
+
+            screenFlash = 5;
+
+            if(frame % 8 === 0){
+                enemyBullets.push(
+                    new Bullet(boss.x, boss.y, Math.random()*Math.PI*2, 7, "#ffffaa", 9, 2)
+                );
+            }
+        }
+        else{
+
+            if(frame % 8 === 0){
+                enemyBullets.push(
+                    new Bullet(boss.x, boss.y, Math.random()*Math.PI*2, 9, "#220044", 12, 2)
+                );
+            }
+        }
+    }
+
+    // =========================
+    // 7. NOTHINGNESS
+    // =========================
+    else if(cycle < 1400){
+
+        if(frame % 70 === 0){
+            enemyBullets.length = 0;
+            screenFlash = 20;
+            player.spd = 2;
+        }
+    }
+
+    // =========================
+    // 8. ORBIT PRISON
+    // =========================
+    else if(cycle < 1600){
+
+        if(frame % 30 === 0){
+
+            for(let i=0;i<14;i++){
+
+                let ang = i * Math.PI * 2 / 14;
+
+                let b = new Bullet(target.x, target.y, ang, 0, "black", 12, 2);
+
+                b.orbit = ang;
+
+                b.update = function(){
+                    this.orbit += 0.05;
+                    this.x = target.x + Math.cos(this.orbit) * 120;
+                    this.y = target.y + Math.sin(this.orbit) * 120;
+                };
+
+                enemyBullets.push(b);
+            }
+        }
+    }
+
+    // =========================
+    // 9. DIMENSION SHIFT
+    // =========================
+    else if(cycle < 1800){
+
+        if(frame % 50 === 0){
+            boss.x = canvas.width/2 + (Math.random()-0.5)*400;
+            boss.y = canvas.height/2 + (Math.random()-0.5)*200;
+            screenShake = 15;
+        }
+
+        if(frame % 5 === 0){
+            enemyBullets.push(
+                new Bullet(boss.x, boss.y, Math.random()*Math.PI*2, 12, "#ff00ff", 7, 2)
+            );
+        }
+    }
+
+    // =========================
+    // 10. APOCALYPSE RAIN
+    // =========================
+    else if(cycle < 2000){
+
+        if(frame % 5 === 0){
+
+            enemyBullets.push({
+                x: Math.random()*canvas.width,
+                y: -50,
+                vy: 16,
+                w: 16,
+                h: 90,
+
+                update(){
+                    this.y += this.vy;
+                },
+
+                draw(){
+                    ctx.fillStyle = "#ff0000";
+                    ctx.fillRect(this.x, this.y, this.w, this.h);
+                }
+            });
+        }
+    }
+
+    // =========================
+    // 11. VOID SPIKES
+    // =========================
+    else if(cycle < 2200){
+
+        if(frame % 50 === 0){
+            for(let i=0;i<6;i++){
+
+                enemyBullets.push({
+                    x: Math.random()*canvas.width,
+                    y: canvas.height + 50,
+                    vy: -14,
+                    w: 30,
+                    h: 160,
+
+                    update(){
+                        this.y += this.vy;
+                    },
+
+                    draw(){
+                        ctx.fillStyle = "#8800ff";
+                        ctx.fillRect(this.x, this.y, this.w, this.h);
+                    }
+                });
+            }
+        }
+    }
+
+    // =========================
+    // 12. RING OF JUDGEMENT
+    // =========================
+    else if(cycle < 2400){
+
+        if(frame % 55 === 0){
+
+            for(let i=0;i<30;i++){
+                enemyBullets.push(
+                    new Bullet(boss.x, boss.y, i*Math.PI*2/30, 9, "#ffff00", 11, 3)
+                );
+            }
+        }
+    }
+
+    // =========================
+    // 13. HP CHAOS
+    // =========================
+    if(boss.hp < boss.maxHp * 0.8){
+
+        if(frame % 10 === 0){
+            enemyBullets.push(
+                new Bullet(boss.x, boss.y, Math.random()*Math.PI*2, 10, "#aa00ff", 9, 2)
+            );
+        }
+    }
+
+    // =========================
+    // 14. DASH STRIKE
+    // =========================
+    if(boss.hp < boss.maxHp * 0.65){
+
+        if(frame % 120 === 0){
+
+            let ang = Math.atan2(target.y - boss.y, target.x - boss.x);
+
+            boss.vx = Math.cos(ang) * 30;
+            boss.vy = Math.sin(ang) * 30;
+        }
+
+        boss.x += boss.vx || 0;
+        boss.y += boss.vy || 0;
+
+        boss.vx *= 0.9;
+        boss.vy *= 0.9;
+    }
+
+    // =========================
+    // 15. ORB FIELD
+    // =========================
+    if(boss.hp < boss.maxHp * 0.55){
+
+        if(frame % 60 === 0){
+
+            for(let i=0;i<16;i++){
+                enemyBullets.push(
+                    new Bullet(boss.x, boss.y, i*Math.PI*2/16, 5, "#00ffaa", 14, 2)
+                );
+            }
+        }
+    }
+
+    // =========================
+    // 16. NOTHING FIELD
+    // =========================
+    if(boss.hp < boss.maxHp * 0.4){
+
+        if(frame % 150 === 0){
+            enemyBullets.length = 0;
+            screenFlash = 30;
+        }
+    }
+
+    // =========================
+    // 17. TRUE DEATH (FIXED NO FALSE KILL)
+    // =========================
+    if(boss.hp < boss.maxHp * 0.25){
+
+        if(frame % 180 === 0){
+
+            let wave = {
+                x: target.x,
+                y: target.y,
+                r: 200,
+                t: 60,
+dmg: 0,
+                update(){
+
+                    this.t--;
+
+                    if(this.t <= 0){
+
+                        let dx = target.x - this.x;
+                        let dy = target.y - this.y;
+
+                        let dist = Math.sqrt(dx*dx + dy*dy);
+
+                        if(dist < this.r){
+                            target.hp = 0;
+                        }
+
+                        this.dead = true;
+                    }
+                },
+
+                draw(){
+
+                    ctx.fillStyle = "rgba(255,0,0,0.15)";
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+                    ctx.fill();
+
+                    ctx.strokeStyle = "#ff0000";
+                    ctx.lineWidth = 12;
+                    ctx.stroke();
+                }
+            };
+
+            enemyBullets.push(wave);
+        }
+    }
+
+    // =========================
+    // 18. HELL WALL
+    // =========================
+    if(boss.hp < boss.maxHp * 0.5 && cycle > 2400){
+
+        if(frame % 50 === 0){
+
+            for(let i=0;i<6;i++){
+                enemyBullets.push({
+                    x: -100,
+                    y: i*canvas.height/6,
+                    vx: 20,
+                    w: 100,
+                    h: 40,
+                    update(){ this.x += this.vx; },
+                    draw(){
+                        ctx.fillStyle = "#ff0000";
+                        ctx.fillRect(this.x,this.y,this.w,this.h);
+                    }
+                });
+            }
+        }
+    }
+
+    // =========================
+    // 19. BLACK SUN
+    // =========================
+    if(boss.hp < boss.maxHp * 0.2 && cycle > 3000){
+
+        player.spd = 2;
+
+        if(frame % 15 === 0){
+
+            for(let i=0;i<20;i++){
+                enemyBullets.push(
+                    new Bullet(boss.x,boss.y,i*Math.PI*2/20 + frame*0.03,11,"#000000",14,3)
+                );
+            }
+        }
+    }
+
+    // =========================
+    // 20. FINAL END
+    // =========================
+    if(boss.hp < boss.maxHp * 0.08 && cycle > 3600){
+
+        screenFlash = 25;
+        screenShake = 30;
+
+        if(frame % 5 === 0){
+
+            for(let i=0;i<40;i++){
+                enemyBullets.push(
+                    new Bullet(boss.x,boss.y,i*Math.PI*2/40,14,"#ffffff",14,5)
+                );
+            }
+        }
+    }
+if(boss.hp >= 25000 && ossivar.length === 0){
+
+ossivar.push(
+
+{x:220,y:180}
+
+);
+
+}
+}
+// =======================
+
+// SPAWN PATTERN
+
+// =======================
+
+  
+
+function spawnPattern(){
+
+  
+
+if(bossFreeze>0)
+
+return;
+
+  
+
+if(selectedChapter === 8){
+
+  
+
+if(stage === 1){
+
+spawnChapter8Stage1();
+
+} else {
+
+spawnThalvornTrue();
+
+}
+
+return;
+
+}
+
+  
+
+if(selectedChapter === 7){
+
+  
+
+if(stage === 1){
+
+spawnHakazelBaktie();
+
+} else {
+
+spawnZephira();
+
+}
+
+return;
+
+}
+
+  
+
+if(selectedChapter === 6){
+
+  
+
+if(stage === 1){
+
+spawnVeilith();
+
+} else {
+
+spawnObsidrax();
+
+}
+
+return;
+
+}
+
+  
+
+if(selectedChapter === 5){
+
+  
+
+if(stage === 1){
+
+spawnTitanor();
+
+}
+
+  
+
+else{
+
+spawnNoctyros();
+
+}
+
+  
+
+return;
+
+}
+
+  
+
+if(selectedChapter === 4 && stage === 1){
+
+spawnHeroHunterTrio();
+
+return;
+
+}
+
+  
+
+if(selectedChapter === 4 && stage === 2){
+
+spawnThalvorn();
+
+return;
+
+}
+
+  
+
+// CHAPTER 3
+
+if(selectedChapter === 3){
+
+  
+
+if(stage === 1){
+
+spawnIceDragonPattern();
+
+}
+
+else {
+
+spawnCryseliaPattern();
+
+}
+
+  
+
+return;
+
+}
+
+  
+
+// CHAPTER 1
+
+if(selectedChapter === 1){
+
+  
+
+// STAGE 1
+
+if(stage === 1){
+
+  
+
+spawnPatternChapter1();
+
+}
+
+  
+
+// STAGE 2
+
+else{
+
+  
+
+spawnPatternVireltha();
+
+}
+
+  
+
+return;
+
+}
+
+  
+
+// CHAPTER 2
+
+if(selectedChapter === 2){
+
+  
+
+// STAGE 2
+
+if(stage === 2){
+
+  
+
+spawnPatternNyxara();
+
+return;
+
+}
+
+}
+
+  
+
+let cycle=
+
+frame%1400;
+
+  
+
+let allBosses=
+
+[boss,...clones];
+
+  
+
+if(cycle<350){
+
+  
+
+if(frame%40===0){
+
+  
+
+let count = boss.hp>=10000&&boss.hp<=17500 ? 10 : 24;
+
+  
+
+allBosses.forEach(b=>{
+
+  
+
+for(let i=0;i<count;i++){
+
+  
+
+enemyBullets.push(
+
+  
+
+new Bullet(
+
+b.x,
+
+b.y,
+
+i*Math.PI*2/count,
+
+2.5,
+
+"#66ff99",
+
+7
+
+)
+
+);
+
+}
+
+});
+
+}
+
+}
+
+  
+
+else if(cycle<700){
+
+  
+
+if(frame % (boss.hp >=10000&&boss.hp<=17500 ? 60 : 20) === 0){
+
+  
+
+allBosses.forEach(b=>{
+
+  
+
+let ang=
+
+Math.atan2(
+
+(elariaClone ? elariaClone.y : player.y) - b.y,
+
+(elariaClone ? elariaClone.x : player.x) - b.x
+
+);
+
+  
+
+let shot = new Bullet(
+
+b.x,
+
+b.y,
+
+ang+(Math.random()-0.5)*0.5,
+
+7,
+
+"#2f6b00",
+
+8
+
+);
+
+  
+
+shot.poison = true;
+
+  
+
+enemyBullets.push(shot);
+
+  
+
+});
+
+}
+
+}
+
+  
+
+else if(cycle<1050){
+
+  
+
+if(frame%40===0){
+
+  
+
+let x=
+
+Math.random()*canvas.width;
+
+  
+
+enemyBullets.push({
+
+  
+
+x:x,
+
+y:-100,
+
+w:22,
+
+h:160,
+
+vy:10,
+
+  
+
+update(){
+
+this.y+=this.vy;
+
+},
+
+  
+
+draw(){
+
+ctx.fillStyle="rgba(255,0,0,0.8)";
+
+ctx.fillRect(this.x-this.w/2,this.y,this.w,this.h);
+
+}
+
+});
+
+}
+
+}
+
+  
+
+else{
+
+  
+
+if(frame%50===0){
+
+  
+
+for(let i=0;i<4;i++){
+
+  
+
+let ang=i*Math.PI*2/4;
+
+  
+
+let drop=new Bullet(
+
+boss.x,
+
+boss.y,
+
+ang,
+
+2,
+
+"black",
+
+12,
+
+1
+
+);
+
+  
+
+drop.bounced=false;
+
+  
+
+drop.update=function(){
+
+  
+
+this.x+=this.vx;
+
+this.y+=this.vy;
+
+  
+
+if(!this.bounced){
+
+  
+
+let hit=false;
+
+  
+
+if(this.x<=this.r||this.x>=canvas.width-this.r){
+
+this.vx*=-1;
+
+hit=true;
+
+}
+
+  
+
+if(this.y<=this.r||this.y>=canvas.height-this.r){
+
+this.vy*=-1;
+
+hit=true;
+
+}
+
+  
+
+if(hit){
+
+this.bounced=true;
+
+}
+
+}
+
+};
+
+  
+
+drop.draw=function(){
+
+  
+
+ctx.save();
+
+ctx.translate(this.x,this.y);
+
+  
+
+let ang=Math.atan2(this.vy,this.vx);
+
+ctx.rotate(ang+Math.PI/2);
+
+  
+
+ctx.shadowColor="black";
+
+ctx.shadowBlur=20;
+
+  
+
+ctx.fillStyle="#111";
+
+  
+
+ctx.beginPath();
+
+ctx.moveTo(0,-18);
+
+ctx.quadraticCurveTo(18,-8,12,10);
+
+ctx.lineTo(6,26);
+
+ctx.lineTo(-6,26);
+
+ctx.lineTo(-12,10);
+
+ctx.quadraticCurveTo(-18,-8,0,-18);
+
+ctx.fill();
+
+  
+
+ctx.strokeStyle="#000";
+
+ctx.lineWidth=4;
+
+  
+
+for(let i=-1.5;i<=1.5;i++){
+
+  
+
+// chân trái
+
+ctx.beginPath();
+
+ctx.moveTo(-12, 6 + i*6);
+
+ctx.lineTo(-26, 6 + i*6);
+
+ctx.stroke();
+
+  
+
+// chân phải
+
+ctx.beginPath();
+
+ctx.moveTo(12, 6 + i*6);
+
+ctx.lineTo(26, 6 + i*6);
+
+ctx.stroke();
+
+}
+
+  
+
+ctx.fillStyle="red";
+
+ctx.beginPath();
+
+ctx.arc(-5,-2,2,0,Math.PI*2);
+
+ctx.arc(5,-2,2,0,Math.PI*2);
+
+ctx.fill();
+
+  
+
+ctx.restore();
+
+};
+
+  
+
+enemyBullets.push(drop);
+
+}
+
+}
+
+}
+
+  
+
+if(boss.hp>=10000&&boss.hp<=17500&&clones.length===0){
+
+  
+
+clones.push(
+
+{x:220,y:180},
+
+{x:canvas.width-220,y:180},
+
+{x:canvas.width/2,y:260}
+
+);
+
+}
+
+}
+
+  
+
+function useSkill(){
+
+  
+
+// Astraea vô hạn mana
+
+if(currentChar !== 0){
+
+  
+
+if(mana <= 0){
+
+return;
+
+}
+
+}
+
+  
+
+if(skillCooldown > 0)
+
+return;
+
+  
+
+// dùng mana
+
+if(currentChar !== 0){
+
+  
+
+mana--;
+
+  
+
+// mana càng thấp cd càng lâu
+
+let lostMana =
+
+maxMana - mana;
+
+  
+
+skillCooldown +=
+
+lostMana * 60;
+
+}
+
+  
+
+if(currentChar===0){
+
+  
+
+skillCooldown=480;
+
+  
+
+let skills=["light","dark","earth","water","fire","wind"];
+
+  
+
+// 10% tỉ lệ nguyên tố cầu vồng
+
+if(Math.random() < 0.1){
+
+  
+
+currentElement = "rainbow(ultimate)";
+
+  
+
+skillCooldown = 720;
+
+  
+
+screenFlash = 120;
+
+screenShake = 35;
+
+bossFreeze = 90;
+
+  
+
+rainbowLaser.push({
+
+  
+
+x: player.x,
+
+y: 0,
+
+  
+
+w: 140,
+
+h: canvas.height,
+
+  
+
+timer: 90,
+
+  
+
+update(){
+
+  
+
+this.x = player.x;
+
+  
+
+this.timer--;
+
+  
+
+// gây dmg liên tục cho boss chính
+
+if(
+
+Math.abs(boss.x - this.x)
+
+< this.w/2 + 60
+
+){
+
+boss.hp -= 45;
+
+}
+
+  
+
+// gây dmg cho clones
+
+clones.forEach(c=>{
+
+  
+
+if(
+
+Math.abs(c.x - this.x)
+
+< this.w/2 + 60
+
+){
+
+boss.hp -= 45;
+
+}
+
+});
+
+  
+
+// gây dmg cho trioBoss
+
+trioBoss.forEach(c=>{
+
+  
+
+if(
+
+Math.abs(c.x - this.x)
+
+< this.w/2 + 60
+
+){
+
+boss.hp -= 45;
+
+}
+
+});
+
+  
+
+if(this.timer <= 0){
+
+this.dead = true;
+
+}
+
+},
+
+  
+
+draw(){
+
+  
+
+let grad =
+
+ctx.createLinearGradient(
+
+this.x,
+
+0,
+
+this.x,
+
+canvas.height
+
+);
+
+  
+
+grad.addColorStop(0,"red");
+
+grad.addColorStop(0.16,"orange");
+
+grad.addColorStop(0.32,"yellow");
+
+grad.addColorStop(0.48,"lime");
+
+grad.addColorStop(0.64,"cyan");
+
+grad.addColorStop(0.8,"blue");
+
+grad.addColorStop(1,"magenta");
+
+  
+
+ctx.fillStyle = grad;
+
+  
+
+ctx.shadowColor = "white";
+
+ctx.shadowBlur = 40;
+
+  
+
+ctx.fillRect(
+
+this.x - this.w/2,
+
+this.y,
+
+this.w,
+
+this.h
+
+);
+
+  
+
+// lõi trắng
+
+ctx.fillStyle =
+
+"rgba(255,255,255,0.9)";
+
+  
+
+ctx.fillRect(
+
+this.x - 20,
+
+this.y,
+
+40,
+
+this.h
+
+);
+
+  
+
+ctx.shadowBlur = 0;
+
+}
+
+});
+
+  
+
+return;
+
+}
+
+currentElement=skills[Math.floor(Math.random()*6)];
+
+  
+
+if(currentElement==="light"){
+
+  
+
+screenFlash=80;
+
+bossFreeze=80;
+
+  
+
+for(let i=0;i<40;i++){
+
+playerBullets.push(new Bullet(
+
+player.x,player.y,
+
+i*Math.PI*2/40,
+
+7,"#ffffaa",6,6
+
+));
+
+}
+
+}
+
+  
+
+else if(currentElement==="dark"){
+
+  
+
+for(let i=0;i<5;i++){
+
+  
+
+let orb=new Bullet(player.x,player.y,i*Math.PI*2/5,4,"#5522aa",24,1);
+
+  
+
+orb.update=function(){
+
+let ang=Math.atan2(boss.y-this.y,boss.x-this.x);
+
+this.vx=Math.cos(ang)*4;
+
+this.vy=Math.sin(ang)*4;
+
+this.x+=this.vx;
+
+this.y+=this.vy;
+
+};
+
+  
+
+playerBullets.push(orb);
+
+}
+
+}
+
+  
+
+else if(currentElement==="earth"){
+
+  
+
+for(let i=0;i<19;i++){
+
+let rock=new Bullet(player.x,canvas.height+50,-Math.PI/2,8,"#886633",16,10);
+
+rock.x=(canvas.width/18)*i;
+
+playerBullets.push(rock);
+
+}
+
+}
+
+  
+
+else if(currentElement==="water"){
+
+  
+
+for(let i=0;i<60;i++){
+
+let ang=i*Math.PI*2/60;
+
+playerBullets.push(new Bullet(player.x,player.y,ang,5,"skyblue",8,5));
+
+}
+
+}
+
+  
+
+else if(currentElement==="fire"){
+
+  
+
+for(let i=0;i<10;i++){
+
+playerBullets.push(new Bullet(player.x,player.y,-Math.PI/2+(Math.random()-0.5)*0.6,10,"#ff6633",14,9));
+
+}
+
+}
+
+  
+
+else if(currentElement==="wind"){
+
+  
+
+for(let i=0;i<50;i++){
+
+playerBullets.push(new Bullet(player.x,player.y,i*Math.PI*2/50,9,"#aaffff",4,3));
+
+}
+
+}
+
+}
+
+  
+
+if(currentChar===1){
+
+  
+
+skillCooldown+=540;
+
+player.hp=Math.min(player.maxHp,player.hp+1);
+
+bossFreeze=140;
+
+}
+
+  
+
+if(currentChar===2){
+
+  
+
+skillCooldown+=360;
+
+screenFlash=180;
+
+bossFreeze=180;
+
+}
+
+  
+
+if(currentChar===3){
+
+  
+
+if(fastMode > 0) return;
+
+  
+
+skillCooldown += 360;
+
+  
+
+// chỉ Velocity mới được dùng
+
+fastMode = 300;
+
+  
+
+}
+
+  
+
+if(currentChar === 4){
+
+  
+
+skillCooldown += 0;
+
+  
+
+// teleport về giữa map
+
+player.x = canvas.width / 2;
+
+player.y = canvas.height / 2;
+
+  
+
+}
+
+  
+
+// ======================
+
+// NERISSA - OCEAN MAGE
+
+// ======================
+
+  
+
+if(currentChar === 5){
+
+  
+
+skillCooldown += 300;
+
+  
+
+screenShake = 20;
+
+  
+
+// sóng biển từ dưới
+
+for(let i=0;i<19;i++){
+
+  
+
+let wave = new Bullet(
+
+player.x,
+
+canvas.height + 80,
+
+-Math.PI/2,
+
+8,
+
+"#44bbff",
+
+16,
+
+5
+
+);
+
+  
+
+wave.x = (canvas.width/18)*i;
+
+  
+
+wave.wave = true;
+
+  
+
+wave.draw = function(){
+
+  
+
+ctx.save();
+
+  
+
+ctx.translate(this.x,this.y);
+
+  
+
+ctx.shadowColor = "#66ddff";
+
+ctx.shadowBlur = 25;
+
+  
+
+// thân sóng
+
+let grad =
+
+ctx.createLinearGradient(
+
+0,-60,
+
+0,60
+
+);
+
+  
+
+grad.addColorStop(0,"#ddffff");
+
+grad.addColorStop(0.4,"#66ccff");
+
+grad.addColorStop(1,"#0066cc");
+
+  
+
+ctx.fillStyle = grad;
+
+  
+
+ctx.fillRect(
+
+-20,
+
+-60,
+
+40,
+
+120
+
+);
+
+  
+
+// bọt nước
+
+ctx.fillStyle =
+
+"rgba(255,255,255,0.8)";
+
+  
+
+for(let j=0;j<4;j++){
+
+  
+
+ctx.beginPath();
+
+  
+
+ctx.arc(
+
+(Math.random()-0.5)*26,
+
+-35 + Math.random()*20,
+
+3 + Math.random()*4,
+
+0,
+
+Math.PI*2
+
+);
+
+  
+
+ctx.fill();
+
+}
+
+  
+
+ctx.restore();
+
+};
+
+  
+
+playerBullets.push(wave);
+
+}
+
+  
+
+// sóng biển từ trên
+
+for(let i=0;i<19;i++){
+
+  
+
+let wave = new Bullet(
+
+player.x,
+
+-80,
+
+Math.PI/2,
+
+8,
+
+"#66ddff",
+
+16,
+
+5
+
+);
+
+  
+
+wave.x = (canvas.width/18)*i;
+
+  
+
+wave.wave = true;
+
+  
+
+wave.draw = function(){
+
+  
+
+ctx.save();
+
+  
+
+ctx.translate(this.x,this.y);
+
+ctx.rotate(Math.PI);
+
+  
+
+ctx.shadowColor = "#88eeff";
+
+ctx.shadowBlur = 25;
+
+  
+
+let grad =
+
+ctx.createLinearGradient(
+
+0,-60,
+
+0,60
+
+);
+
+  
+
+grad.addColorStop(0,"#ffffff");
+
+grad.addColorStop(0.4,"#77ddff");
+
+grad.addColorStop(1,"#0055aa");
+
+  
+
+ctx.fillStyle = grad;
+
+  
+
+ctx.fillRect(
+
+-20,
+
+-60,
+
+40,
+
+120
+
+);
+
+  
+
+ctx.fillStyle =
+
+"rgba(255,255,255,0.85)";
+
+  
+
+for(let j=0;j<4;j++){
+
+  
+
+ctx.beginPath();
+
+  
+
+ctx.arc(
+
+(Math.random()-0.5)*26,
+
+-35 + Math.random()*20,
+
+3 + Math.random()*4,
+
+0,
+
+Math.PI*2
+
+);
+
+  
+
+ctx.fill();
+
+}
+
+  
+
+ctx.restore();
+
+};
+
+  
+
+playerBullets.push(wave);
+
+}
+
+  
+
+}
+
+  
+
+// ======================
+
+// LEXIRA - LASER SHOT
+
+// ======================
+
+  
+
+if(currentChar === 6){
+
+  
+
+skillCooldown += 360;
+
+  
+
+let ang = -Math.PI / 2;
+
+  
+
+let laser = new Bullet(
+
+player.x,
+
+player.y,
+
+ang,
+
+12,
+
+"#00ff88",
+
+10,
+
+30
+
+);
+
+  
+
+laser.life = 120;
+
+  
+
+// buff dmg
+
+laser.bonusDmg = 0;
+
+  
+
+// timer chung
+
+laser.buffTimer = 0;
+
+  
+
+laser.update = function(){
+
+  
+
+this.x += this.vx;
+
+this.y += this.vy;
+
+  
+
+this.life--;
+
+  
+
+// timer buff
+
+if(this.buffTimer > 0){
+
+  
+
+this.buffTimer--;
+
+  
+
+// hết 10 giây mất toàn bộ buff
+
+if(this.buffTimer <= 0){
+
+  
+
+this.bonusDmg = 0;
+
+}
+
+}
+
+  
+
+// damage boss
+
+if(
+
+Math.hypot(
+
+this.x - boss.x,
+
+this.y - boss.y
+
+) < this.r + 60
+
+){
+
+boss.hp -= this.dmg + this.bonusDmg;
+
+}
+
+  
+
+// xoá đạn nhỏ
+
+enemyBullets.forEach(b=>{
+
+  
+
+if(
+
+b.r &&
+
+b.r <= 10 &&
+
+Math.hypot(
+
+this.x - b.x,
+
+this.y - b.y
+
+) < this.r + b.r
+
+){
+
+  
+
+for(let i=0;i<6;i++){
+
+  
+
+dataBits.push({
+
+  
+
+x:b.x + (Math.random()-0.5)*20,
+
+y:b.y + (Math.random()-0.5)*20,
+
+  
+
+txt:
+
+Math.random()<0.5
+
+? "0"
+
+: "1",
+
+  
+
+life:120,
+
+  
+
+vy:-0.5-Math.random()
+
+});
+
+}
+
+  
+
+this.bonusDmg += 3;
+
+  
+
+// chỉ bắt đầu timer nếu chưa có
+
+if(this.buffTimer <= 0){
+
+  
+
+this.buffTimer = 600;
+
+}
+
+  
+
+b.dead = true;
+
+}
+
+});
+
+  
+
+if(this.life <= 0){
+
+this.dead = true;
+
+}
+
+};
+
+  
+
+laser.draw = function(){
+
+  
+
+ctx.save();
+
+  
+
+ctx.translate(this.x,this.y);
+
+  
+
+ctx.rotate(
+
+Math.atan2(this.vy,this.vx)
+
+);
+
+  
+
+ctx.shadowColor = "#00ff88";
+
+ctx.shadowBlur = 25;
+
+  
+
+// trail
+
+ctx.fillStyle =
+
+"rgba(0,255,120,0.35)";
+
+  
+
+ctx.fillRect(
+
+-60,
+
+-8,
+
+60,
+
+16
+
+);
+
+  
+
+// lõi laser lớn để che đạn tròn
+
+ctx.fillStyle =
+
+"#00ff88";
+
+  
+
+ctx.fillRect(
+
+-18,
+
+-8,
+
+42,
+
+16
+
+);
+
+  
+
+// lõi sáng
+
+ctx.fillStyle =
+
+"#ccffdd";
+
+  
+
+ctx.fillRect(
+
+-10,
+
+-4,
+
+30,
+
+8
+
+);
+
+  
+
+// đầu laser
+
+ctx.beginPath();
+
+  
+
+ctx.arc(
+
+22,
+
+0,
+
+8,
+
+0,
+
+Math.PI*2
+
+);
+
+  
+
+ctx.fill();
+
+  
+
+// hiển thị buff
+
+if(this.bonusDmg > 0){
+
+  
+
+ctx.fillStyle = "#00ff88";
+
+ctx.font = "14px Arial";
+
+  
+
+ctx.fillText(
+
+"+" + this.bonusDmg,
+
+-10,
+
+-18
+
+);
+
+}
+
+  
+
+ctx.restore();
+
+};
+
+  
+
+playerBullets.push(laser);
+
+  
+
+}
+
+  
+
+// ======================
+
+// ELARIA - CLONE
+
+// ======================
+
+  
+
+if(currentChar === 7){
+
+  
+
+skillCooldown += 420;
+
+  
+
+elariaClone = {
+
+  
+
+x: player.x,
+
+y: player.y,
+
+  
+
+timer: 300
+
+};
+
+  
+
+let elariaSkills = [
+
+"light",
+
+"dark",
+
+"earth",
+
+"water",
+
+"fire",
+
+"wind",
+
+"wood",
+
+"metal",
+
+"thunder",
+
+"sound"
+
+];
+
+  
+
+currentElement =
+
+elariaSkills[
+
+Math.floor(Math.random() * 10)
+
+];
+
+  
+
+if(currentElement==="light"){
+
+  
+
+screenFlash=80;
+
+bossFreeze=80;
+
+  
+
+for(let i=0;i<40;i++){
+
+playerBullets.push(new Bullet(
+
+player.x,player.y,
+
+i*Math.PI*2/40,
+
+7,"#ffffaa",6,6
+
+));
+
+}
+
+}
+
+  
+
+else if(currentElement==="dark"){
+
+  
+
+for(let i=0;i<5;i++){
+
+  
+
+let orb=new Bullet(player.x,player.y,i*Math.PI*2/5,4,"#5522aa",24,1);
+
+  
+
+orb.update=function(){
+
+let ang=Math.atan2(boss.y-this.y,boss.x-this.x);
+
+this.vx=Math.cos(ang)*4;
+
+this.vy=Math.sin(ang)*4;
+
+this.x+=this.vx;
+
+this.y+=this.vy;
+
+};
+
+  
+
+playerBullets.push(orb);
+
+}
+
+}
+
+  
+
+else if(currentElement==="earth"){
+
+  
+
+for(let i=0;i<19;i++){
+
+let rock=new Bullet(player.x,canvas.height+50,-Math.PI/2,8,"#886633",16,10);
+
+rock.x=(canvas.width/18)*i;
+
+playerBullets.push(rock);
+
+}
+
+}
+
+  
+
+else if(currentElement==="water"){
+
+  
+
+for(let i=0;i<60;i++){
+
+let ang=i*Math.PI*2/60;
+
+playerBullets.push(new Bullet(player.x,player.y,ang,5,"skyblue",8,5));
+
+}
+
+}
+
+  
+
+else if(currentElement==="fire"){
+
+  
+
+for(let i=0;i<10;i++){
+
+playerBullets.push(new Bullet(player.x,player.y,-Math.PI/2+(Math.random()-0.5)*0.6,10,"#ff6633",14,9));
+
+}
+
+}
+
+  
+
+else if(currentElement==="wind"){
+
+  
+
+for(let i=0;i<50;i++){
+
+playerBullets.push(new Bullet(player.x,player.y,i*Math.PI*2/50,9,"#aaffff",4,3));
+
+}
+
+}
+
+  
+
+else if(currentElement==="wood"){
+
+  
+
+let orb = new Bullet(
+
+player.x,
+
+player.y,
+
+-Math.PI / 2,
+
+9,
+
+"#33ff77",
+
+14,
+
+6
+
+);
+
+  
+
+orb.heal = true;
+
+  
+
+orb.draw = function(){
+
+  
+
+ctx.save();
+
+  
+
+ctx.shadowColor = "#33ff77";
+
+ctx.shadowBlur = 20;
+
+  
+
+ctx.fillStyle = "#33ff77";
+
+  
+
+ctx.beginPath();
+
+ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+
+ctx.fill();
+
+  
+
+ctx.restore();
+
+};
+
+  
+
+orb.update = function(){
+
+  
+
+this.x += this.vx;
+
+this.y += this.vy;
+
+  
+
+// heal khi bắn ra
+
+if(!this.healed){
+
+  
+
+player.hp = Math.min(
+
+player.maxHp,
+
+player.hp + 1
+
+);
+
+  
+
+this.healed = true;
+
+}
+
+};
+
+  
+
+playerBullets.push(orb);
+
+}
+
+  
+
+else if(currentElement==="metal"){
+
+  
+
+screenShake = 15;
+
+  
+
+for(let i=0;i<30;i++){
+
+  
+
+let shard = new Bullet(
+
+Math.random()*canvas.width,
+
+-50 - Math.random()*200,
+
+Math.PI/2,
+
+13,
+
+"#bbbbbb",
+
+8,
+
+10
+
+);
+
+  
+
+shard.draw = function(){
+
+  
+
+ctx.save();
+
+ctx.translate(this.x,this.y);
+
+ctx.rotate(Math.PI/2);
+
+  
+
+ctx.fillStyle = "#ddd";
+
+ctx.fillRect(-3,-20,6,40);
+
+  
+
+ctx.fillStyle = "#fff";
+
+ctx.fillRect(-1,-18,2,36);
+
+  
+
+ctx.restore();
+
+};
+
+  
+
+playerBullets.push(shard);
+
+}
+
+}
+
+  
+
+else if(currentElement==="thunder"){
+
+  
+
+screenFlash = 60;
+
+bossFreeze = 30;
+
+  
+
+let bolt = new Bullet(
+
+player.x,
+
+0,
+
+Math.PI/2,
+
+0,
+
+"#ffff00",
+
+18,
+
+160
+
+);
+
+  
+
+bolt.life = 6; // ~0.1 giây
+
+  
+
+bolt.update = function(){
+
+  
+
+this.life--;
+
+  
+
+// hit boss
+
+if(Math.abs(boss.x - this.x) < 60){
+
+boss.hp -= this.dmg;
+
+}
+
+  
+
+if(this.life <= 0){
+
+this.dead = true;
+
+}
+
+};
+
+  
+
+bolt.draw = function(){
+
+  
+
+ctx.save();
+
+  
+
+ctx.strokeStyle = "#ffff00";
+
+ctx.shadowColor = "#ffff00";
+
+ctx.shadowBlur = 30;
+
+ctx.lineWidth = 4;
+
+  
+
+ctx.beginPath();
+
+  
+
+let x = this.x;
+
+  
+
+ctx.moveTo(x, 0);
+
+  
+
+// làm tia sét rung nhẹ theo chiều dọc
+
+for(let y = 0; y < canvas.height; y += 20){
+
+  
+
+x += (Math.random() - 0.5) * 18;
+
+  
+
+ctx.lineTo(x, y);
+
+}
+
+  
+
+ctx.stroke();
+
+  
+
+// lõi sáng ở giữa (cho có chiều sâu)
+
+ctx.strokeStyle = "#ffffff";
+
+ctx.shadowBlur = 10;
+
+ctx.lineWidth = 2;
+
+  
+
+ctx.beginPath();
+
+  
+
+let x2 = this.x;
+
+  
+
+ctx.moveTo(x2, 0);
+
+  
+
+for(let y = 0; y < canvas.height; y += 25){
+
+  
+
+x2 += (Math.random() - 0.5) * 10;
+
+  
+
+ctx.lineTo(x2, y);
+
+}
+
+  
+
+ctx.stroke();
+
+  
+
+ctx.restore();
+
+};
+
+  
+
+playerBullets.push(bolt);
+
+}
+
+  
+
+else if(currentElement==="sound"){
+
+  
+
+screenShake = 12;
+
+  
+
+let wave = {
+
+x: player.x,
+
+y: player.y,
+
+r: 0,
+
+maxR: 220,
+
+speed: 16
+
+};
+
+  
+
+wave.draw = function(){
+
+  
+
+ctx.save();
+
+  
+
+ctx.strokeStyle = "#88ccff";
+
+ctx.shadowColor = "#88ccff";
+
+ctx.shadowBlur = 20;
+
+  
+
+ctx.beginPath();
+
+ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+
+ctx.stroke();
+
+  
+
+ctx.restore();
+
+};
+
+  
+
+wave.update = function(){
+
+  
+
+this.r += this.speed;
+
+  
+
+// 🔊 đẩy đạn nhỏ
+
+enemyBullets.forEach(b => {
+
+  
+
+if(b.r && b.r <= 10){
+
+  
+
+let dx = b.x - this.x;
+
+let dy = b.y - this.y;
+
+  
+
+let dist = Math.hypot(dx,dy);
+
+  
+
+if(dist < this.r){
+
+  
+
+let ang = Math.atan2(dy,dx);
+
+  
+
+b.vx += Math.cos(ang) * 5;
+
+b.vy += Math.sin(ang) * 5;
+
+}
+
+}
+
+});
+
+  
+
+// 💥 boss bị trúng sóng âm
+
+let dxb = boss.x - this.x;
+
+let dyb = boss.y - this.y;
+
+  
+
+let distBoss = Math.hypot(dxb, dyb);
+
+  
+
+if(distBoss < this.r){
+
+boss.hp -= 5;
+
+}
+
+  
+
+// xoá wave khi hết tầm
+
+if(this.r >= this.maxR){
+
+this.dead = true;
+
+}
+
+};
+
+  
+
+playerBullets.push(wave);
+
+}
+
+  
+
+}
+
+// ======================
+// LUCIEN - CÂU LINH HỒN
+// ======================
+if(currentChar === 8){
+
+    skillCooldown += 480;
+
+    bossFreeze = 180;
+
+    let soulPhantom = {
+
+        x: boss.x,
+        y: boss.y,
+
+        timer: 180,
+        alpha: 1,
+
+        update(){
+
+            this.timer--;
+
+            // =========================
+            // ĐIỂM MÓC GẦN BOSS
+            // =========================
+            this.hookX =
+            boss.x - 0;
+
+            this.hookY =
+            boss.y + 100;
+
+            // =========================
+            // MỒI CAM
+            // =========================
+            this.baitX =
+            this.hookX +
+            80 +
+            Math.sin(frame / 3) * 20;
+
+            this.baitY =
+            this.hookY +
+            35 +
+            Math.cos(frame / 4) * 8;
+
+            // =========================
+            // LINH HỒN BAY RA NHẸ
+            // =========================
+            this.x +=
+            (this.baitX - this.x) / 12;
+
+            this.y +=
+            (this.baitY - this.y) / 12;
+
+            // =========================
+            // BOSS RUNG
+            // =========================
+            boss.x +=
+            Math.floor(Math.random()*5) - 2;
+
+            boss.y +=
+            Math.floor(Math.random()*5) - 2;
+
+            // =========================
+            // DAMAGE LIÊN TỤC
+            // =========================
+            boss.hp -= 10;
+
+            if(boss.hp < 0){
+                boss.hp = 0;
+            }
+        },
+
+        draw(){
+
+            let fade =
+            this.alpha *
+            (this.timer / 180);
+
+            // =========================
+            // LINH HỒN BOSS
+            // =========================
+            ctx.save();
+
+            ctx.globalAlpha =
+            fade * 0.55;
+
+            ctx.shadowColor =
+            "#bbccff";
+
+            ctx.shadowBlur = 28;
+
+            let bossImgToUse =
+            currentBossImg ||
+            bossImg1;
+
+            ctx.drawImage(
+                bossImgToUse,
+                this.x - 85,
+                this.y - 85,
+                170,
+                170
+            );
+
+            ctx.restore();
+
+            // =========================
+            // DÂY CÂU PLAYER -> MÓC
+            // =========================
+            ctx.strokeStyle =
+            "#ffffff";
+
+            ctx.lineWidth = 4;
+
+            ctx.shadowColor =
+            "#ffffff";
+
+            ctx.shadowBlur = 12;
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                player.x,
+                player.y - 10
+            );
+
+            ctx.quadraticCurveTo(
+                (player.x + this.hookX) / 2,
+                player.y - 80,
+                this.hookX,
+                this.hookY
+            );
+
+            ctx.stroke();
+
+            // =========================
+            // DÂY NGẮN MÓC -> MỒI
+            // =========================
+            ctx.beginPath();
+
+            ctx.moveTo(
+                this.hookX,
+                this.hookY
+            );
+
+            ctx.quadraticCurveTo(
+                (this.hookX + this.baitX) / 2,
+                this.hookY - 15,
+                this.baitX,
+                this.baitY
+            );
+
+            ctx.stroke();
+
+            // =========================
+            // MÓC CÂU
+            // =========================
+            ctx.fillStyle =
+            "#dddddd";
+
+            ctx.shadowColor =
+            "#ffffff";
+
+            ctx.shadowBlur = 14;
+
+            ctx.beginPath();
+
+            ctx.arc(
+                this.hookX,
+                this.hookY,
+                8,
+                0,
+                Math.PI*2
+            );
+
+            ctx.fill();
+
+            // móc cong
+            ctx.strokeStyle =
+            "#ffffff";
+
+            ctx.lineWidth = 3;
+
+            ctx.beginPath();
+
+            ctx.arc(
+                this.hookX + 4,
+                this.hookY + 6,
+                10,
+                Math.PI * 0.2,
+                Math.PI * 1.2
+            );
+
+            ctx.stroke();
+
+            // =========================
+            // MỒI CAM
+            // =========================
+            ctx.shadowColor =
+            "#ff8800";
+
+            ctx.shadowBlur = 25;
+
+            ctx.fillStyle =
+            "#ff6600";
+
+            ctx.beginPath();
+
+            ctx.arc(
+                this.baitX,
+                this.baitY,
+                10,
+                0,
+                Math.PI*2
+            );
+
+            ctx.fill();
+
+            // lõi sáng
+            ctx.fillStyle =
+            "#ffee88";
+
+            ctx.beginPath();
+
+            ctx.arc(
+                this.baitX - 2,
+                this.baitY - 2,
+                4,
+                0,
+                Math.PI*2
+            );
+
+            ctx.fill();
+
+            ctx.shadowBlur = 0;
+        }
+    };
+
+    if(!window.soulPhantoms){
+        window.soulPhantoms = [];
+    }
+
+    window.soulPhantoms.push(soulPhantom);
+}
+
+return;
+
+}
+
+function switchCharacter(){
+
+  
+
+activeTag++;
+
+  
+
+if(activeTag >= teamChars.length){
+
+activeTag = 0;
+
+}
+
+  
+
+currentChar =
+
+teamChars[activeTag];
+
+  
+
+}
+
+  
+
+document.getElementById("skillBtn")
+
+.addEventListener("touchstart",e=>{
+
+e.preventDefault();
+
+useSkill();
+
+});
+
+  
+
+document.getElementById("switchBtn")
+
+.addEventListener("touchstart",e=>{
+
+e.preventDefault();
+
+  
+
+if(tagMode){
+
+switchCharacter();
+
+}
+
+});
+
+  
+
+let lastX,lastY;
+
+  
+
+window.addEventListener("touchstart",e=>{
+
+lastX=e.touches[0].clientX;
+
+lastY=e.touches[0].clientY;
+
+});
+
+  
+
+window.addEventListener("touchmove",e=>{
+
+if(!gameStarted) return;
+
+  
+
+e.preventDefault();
+
+  
+
+if(paralyzeTimer > 0){
+
+return;
+
+}
+
+  
+
+let x=e.touches[0].clientX;
+
+let y=e.touches[0].clientY;
+
+  
+
+let mult = 1;
+
+  
+
+if(currentChar === 3 && fastMode > 0){
+
+mult = 2.7;
+
+}
+
+  
+
+// NYXARA làm điều khiển khó hơn
+
+if(darkControl > 0){
+
+  
+
+mult *= 0.45;
+
+  
+
+player.x-=(x-lastX)*mult;
+
+player.y+=(y-lastY)*mult*0.5;
+
+}
+
+  
+
+else{
+
+  
+
+player.x+=(x-lastX)*mult;
+
+player.y+=(y-lastY)*mult;
+
+}
+
+  
+
+lastX=x;
+
+lastY=y;
+
+  
+
+player.x=Math.max(
+
+20,
+
+Math.min(canvas.width-20,player.x)
+
+);
+
+  
+
+player.y=Math.max(
+
+20,
+
+Math.min(canvas.height-20,player.y)
+
+);
+
+  
+
+},{passive:false});
+
+  
+
+function update(){
+
+  
+
+frame++;
+
+  
+
+if(hitFlash > 0) hitFlash--;
+
+if(player.invuln>0) player.invuln--;
+
+if(skillCooldown>0) skillCooldown--;
+
+if(screenFlash>0) screenFlash--;
+
+if(bossFreeze>0) bossFreeze--;
+
+if(fastMode>0) fastMode--;
+
+if(paralyzeTimer > 0)
+
+paralyzeTimer--;
+
+if(darkControl > 0)
+
+darkControl--;
+
+if(screenShake > 0)
+
+screenShake--;
+
+  
+
+dataBits.forEach(b=>{
+
+  
+
+b.y += b.vy;
+
+b.life--;
+
+});
+
+  
+
+dataBits =
+
+dataBits.filter(b=>b.life > 0);
+
+  
+
+// =======================
+
+// MANA REGEN
+
+// =======================
+
+  
+
+if(currentChar !== 0){
+
+  
+
+manaRegenTimer++;
+
+  
+
+// mỗi 10 giây hồi 1 mana
+
+if(manaRegenTimer >= 600){
+
+  
+
+manaRegenTimer = 0;
+
+  
+
+mana = Math.min(
+
+maxMana,
+
+mana + 1
+
+);
+
+}
+
+}
+
+  
+
+if(elariaClone){
+
+  
+
+elariaClone.timer--;
+
+  
+
+if(elariaClone.timer <= 0){
+
+elariaClone = null;
+
+}
+
+}
+
+  
+
+for(let i = poisonQueue.length - 1; i >= 0; i--){
+
+poisonQueue[i]--;
+
+  
+
+if(poisonQueue[i] <= 0){
+
+player.hp -= 1;
+
+poisonQueue.splice(i, 1);
+
+}
+
+}
+
+  
+
+if(bossFreeze<=0){
+
+boss.x = canvas.width/2 + Math.sin(frame*0.01)*180;
+
+boss.y = 140 + Math.sin(frame*0.02)*45;
+
+}
+
+  
+
+clones.forEach((c,i)=>{
+
+c.x+=Math.sin(frame*0.02+i)*1.4;
+
+c.y+=Math.cos(frame*0.03+i);
+
+});
+
+if(bossFreeze <= 0){
+
+ossivar.forEach((c,i)=>{
+
+c.x += Math.sin(frame*0.02 + i) * 1.4;
+
+c.y += Math.cos(frame*0.03 + i);
+
+});
+
+}
+
+if(bossFreeze <= 0){
+
+trioBoss.forEach((c,i)=>{
+
+c.x += Math.sin(frame*0.02 + i) * 1.4;
+
+c.y += Math.cos(frame*0.03 + i);
+
+});
+
+}
+
+if(bossFreeze <= 0){
+
+    cryselia.forEach((c,i)=>{
+
+        // xoay tròn nhẹ
+        c.x += Math.sin(frame*0.025 + i) * 2.2;
+
+        c.y += Math.cos(frame*0.018 + i*2) * 1.5;
+    });
+}
+
+if(bossFreeze <= 0){
+
+    zephira.forEach((c,i)=>{
+
+        // lốc xoáy rung mạnh hơn
+        c.x += Math.cos(frame*0.05 + i*3) * 3.5;
+
+        c.y += Math.sin(frame*0.035 + i) * 2.8;
+    });
+}
+if(selectedChapter === 2 && boss.hp < 10000){
+
+clones = [];
+
+}
+
+if(selectedChapter === 8 && boss.hp < 25000){
+
+ossivar = [];
+
+}
+
+spawnPattern();
+
+  
+
+if(currentChar===0 && frame%6===0){
+
+  
+
+let dragonX = player.x - 55;
+
+let dragonY = player.y - 10;
+
+  
+
+dragonFire.push(
+
+new Bullet(
+
+dragonX - 66,
+
+dragonY - 2,
+
+-Math.PI/2+(Math.random()-0.5)*0.5,
+
+10,
+
+"#ff6633",
+
+5,
+
+3
+
+)
+
+);
+
+}
+
+  
+
+// CÁO FLORENSYA BẮN
+
+  
+
+if(currentChar === 1 && frame % 10 === 0){
+
+  
+
+let foxX = player.x - 55;
+
+let foxY = player.y - 5;
+
+  
+
+dragonFire.push(
+
+new Bullet(
+
+foxX - 20,
+
+foxY,
+
+-Math.PI/2 + (Math.random()-0.5)*0.4,
+
+9,
+
+"#66ff99",
+
+5,
+
+2
+
+)
+
+);
+
+}
+
+  
+
+if(frame%5===0){
+
+playerBullets.push(new Bullet(player.x,player.y,-Math.PI/2,11,"white",4,2));
+
+}
+
+if(window.soulPhantoms){
+    window.soulPhantoms = window.soulPhantoms.filter(p => {
+        p.update();
+        return p.timer > 0;
+    });
+}
+
+enemyBullets.forEach(b=>{
+
+  
+
+b.update();
+
+  
+
+let hit = false;
+
+  
+
+if(b.r){
+
+  
+
+// warning chưa gây damage
+
+if(b.active === false){
+
+  
+
+hit = false;
+
+}
+
+  
+
+else{
+
+  
+
+hit =
+
+Math.hypot(
+
+b.x-player.x,
+
+b.y-player.y
+
+) < 10 + b.r;
+
+}
+
+}
+
+  
+
+else{
+
+  
+
+hit =
+
+player.x > b.x-b.w/2 &&
+
+player.x < b.x+b.w/2 &&
+
+player.y > b.y &&
+
+player.y < b.y+b.h;
+
+}
+
+  
+
+if(hit && player.invuln<=0){
+
+  
+
+player.hp -= (b.dmg || 1);
+
+  
+
+player.invuln = 60;
+
+hitFlash = 60; // 60 frame = 1 giây (mỗi 0.1s = 6 frame)
+
+if(b.paralyze){
+
+  
+
+paralyzeTimer = 180;
+
+}
+
+  
+
+if(b.poison){
+
+poisonQueue.push(60); // 1 giây (60 frame)
+
+}
+
+  
+
+if(b.dark){
+
+  
+
+darkControl = 240;
+
+}
+
+  
+
+if(b.freeze){
+
+paralyzeTimer = 180; // Cryselia freeze = tê liệt
+
+}
+
+  
+
+if(player.hp <= 0){
+
+  
+
+gameOver = true;
+
+  
+
+ctx.fillStyle =
+
+"rgba(0,0,0,0.7)";
+
+  
+
+ctx.fillRect(
+
+0,
+
+0,
+
+canvas.width,
+
+canvas.height
+
+);
+
+  
+
+ctx.fillStyle = "red";
+
+  
+
+ctx.font =
+
+"bold 60px sans-serif";
+
+  
+
+ctx.textAlign = "center";
+
+  
+
+ctx.fillText(
+
+"GAME OVER",
+
+canvas.width/2,
+
+canvas.height/2
+
+);
+
+  
+
+alert("GAME OVER");
+
+  
+
+return;
+
+}
+
+}
+
+  
+
+// xoá nếu ra khỏi mép 500px
+
+if(
+
+b.x < -500 ||
+
+b.x > canvas.width + 500 ||
+
+b.y < -500 ||
+
+b.y > canvas.height + 500
+
+){
+
+b.dead = true;
+
+}
+
+  
+
+});
+
+  
+
+enemyBullets = enemyBullets.filter(b => !b.dead);
+
+  
+
+rainbowLaser.forEach(l=>l.update());
+
+  
+
+rainbowLaser =
+
+rainbowLaser.filter(l=>!l.dead);
+
+[...playerBullets,...dragonFire].forEach(b=>{
+
+  
+
+b.update();
+
+  
+
+// xoá nếu ra khỏi mép 500px
+
+if(
+
+b.x < -500 ||
+
+b.x > canvas.width + 500 ||
+
+b.y < -500 ||
+
+b.y > canvas.height + 500
+
+){
+
+b.dead = true;
+
+}
+
+  
+
+[boss, ...trioBoss, ...clones, ...cryselia, ...zephira, ...ossivar].forEach(t => {
+
+if (Math.hypot(b.x - t.x, b.y - t.y) < 60) {
+
+boss.hp -= b.dmg;
+
+}
+
+});
+
+});
+
+  
+
+playerBullets =
+
+playerBullets.filter(b=>!b.dead);
+
+  
+
+dragonFire =
+
+dragonFire.filter(b=>!b.dead);
+
+  
+
+document.getElementById("hpFill").style.width=(player.hp/player.maxHp)*100+"%";
+
+let bossHp, bossMax;
+
+  
+
+// mana bar
+
+let manaFill =
+
+document.getElementById("manaFill");
+
+  
+
+if(manaFill){
+
+  
+
+manaFill.style.width =
+
+(mana/maxMana)*100 + "%";
+
+}
+
+  
+
+document.getElementById("bossFill").style.width =
+
+(boss.hp / boss.maxHp) * 100 + "%";
+
+document.getElementById("info").innerHTML=
+
+  
+
+"Current: " + names[currentChar] +
+
+  
+
+"<br>Team: " +
+
+  
+
+teamChars.map(id=>{
+
+  
+
+if(id === currentChar){
+
+  
+
+return "【"+names[id]+"】";
+
+}
+
+  
+
+return names[id];
+
+  
+
+}).join(" | ")
+
+  
+
++
+
+  
+
+"<br>Skill CD: " +
+
+Math.ceil(skillCooldown/60)
+
+  
+
++
+
+  
+
+((currentChar===0 || currentChar===7)
+
+?"<br>Element: "+ (currentElement || "")
+
+:"");
+
+  
+
+if(boss.hp<=0){
+
+if(stage === 1){
+
+stage = 2;
+
+enemyBullets = [];
+playerBullets = [];
+dragonFire = [];
+clones = [];
+trioBoss = [];
+cryselia = [];
+zephira = [];
+
+frame = 0;
+
+boss.x = canvas.width/2;
+
+boss.y = 140;
+
+player.hp = player.maxHp;
+
+player.invuln = 120;
+
+  
+
+if(selectedChapter === 1){
+
+  
+
+boss.maxHp = 10000;
+
+boss.hp = 10000;
+
+  
+
+document.querySelector("#ui").innerHTML = `
+
+HP
+
+<div class="bar">
+
+<div id="hpFill" class="fill"></div>
+
+</div>
+
+  
+
+MANA${tagMode ? "" : " - " + (currentChar === 0 ? "Infinity" : maxMana)}
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Name Boss: Vireltha
+
+<div class="bar">
+
+<div id="bossFill" class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+`;
+
+}
+
+  
+
+else if(selectedChapter === 2){
+
+  
+
+boss.maxHp = 15000;
+
+boss.hp = 15000;
+
+  
+
+document.querySelector("#ui").innerHTML = `
+
+HP
+
+<div class="bar">
+
+<div id="hpFill" class="fill"></div>
+
+</div>
+
+  
+
+MANA${tagMode ? "" : " - " + (currentChar === 0 ? "Infinity" : maxMana)}
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Name Boss: Nyxara
+
+<div class="bar">
+
+<div id="bossFill" class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+`;
+
+}
+
+  
+
+else if(selectedChapter === 3){
+
+  
+
+boss.maxHp = 10000;
+
+boss.hp = 10000;
+
+  
+
+document.querySelector("#ui").innerHTML = `
+
+HP
+
+<div class="bar">
+
+<div id="hpFill" class="fill"></div>
+
+</div>
+
+  
+
+MANA${tagMode ? "" : " - " + (currentChar === 0 ? "Infinity" : maxMana)}
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Name Boss: Cryselia
+
+<div class="bar">
+
+<div id="bossFill" class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+`;
+
+}
+
+  
+
+else if(selectedChapter === 4){
+
+  
+
+boss.maxHp = 20000;
+
+boss.hp = 20000;
+
+  
+
+document.querySelector("#ui").innerHTML = `
+
+HP
+
+<div class="bar">
+
+<div id="hpFill" class="fill"></div>
+
+</div>
+
+  
+
+MANA${tagMode ? "" : " - " + (currentChar === 0 ? "Infinity" : maxMana)}
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Name Boss: Thalvorn
+
+<div class="bar">
+
+<div id="bossFill" class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+`;
+
+}
+
+  
+
+else if(selectedChapter === 5){
+
+  
+
+boss.maxHp = 16000;
+
+boss.hp = 16000;
+
+  
+
+document.querySelector("#ui").innerHTML = `
+
+HP
+
+<div class="bar">
+
+<div id="hpFill" class="fill"></div>
+
+</div>
+
+  
+
+MANA${tagMode ? "" : " - " + (currentChar === 0 ? "Infinity" : maxMana)}
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Name Boss: Noctyros
+
+<div class="bar">
+
+<div id="bossFill" class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+`;
+
+}
+
+  
+
+else if(selectedChapter === 6){
+
+  
+
+boss.maxHp = 35000;
+
+boss.hp = 35000;
+
+  
+
+document.querySelector("#ui").innerHTML = `
+
+HP
+
+<div class="bar">
+
+<div id="hpFill" class="fill"></div>
+
+</div>
+
+  
+
+MANA${tagMode ? "" : " - " + (currentChar === 0 ? "Infinity" : maxMana)}
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Name Boss: Obsidrax
+
+<div class="bar">
+
+<div id="bossFill" class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+`;
+
+}
+
+  
+
+else if(selectedChapter === 7){
+
+  
+
+boss.maxHp = 10000;
+
+boss.hp = 10000;
+
+  
+
+document.querySelector("#ui").innerHTML = `
+
+HP
+
+<div class="bar">
+
+<div id="hpFill" class="fill"></div>
+
+</div>
+
+  
+
+MANA${tagMode ? "" : " - " + (currentChar === 0 ? "Infinity" : maxMana)}
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Name Boss: Zephira
+
+<div class="bar">
+
+<div id="bossFill" class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+`;
+
+}
+
+else if(selectedChapter === 8){
+
+boss.maxHp = 40000;
+
+boss.hp = 40000;
+
+document.querySelector("#ui").innerHTML = `
+
+HP
+
+<div class="bar">
+
+<div id="hpFill" class="fill"></div>
+
+</div>
+
+  
+
+MANA${tagMode ? "" : " - " + (currentChar === 0 ? "Infinity" : maxMana)}
+
+<div class="bar" style="height:10px;">
+
+<div id="manaFill"
+
+class="fill"
+
+style="
+
+background:linear-gradient(
+
+to right,
+
+#33bbff,
+
+#88ddff
+
+);
+
+"></div>
+
+</div>
+
+  
+
+Boss HP - Name Boss: Thalvorn(True)(with Ossivar)
+
+<div class="bar">
+
+<div id="bossFill" class="fill"></div>
+
+</div>
+
+  
+
+<div id="info"></div>
+
+`;
+
+}
+
+return;
+
+}
+
+  
+
+gameOver = true;
+
+  
+
+ctx.fillStyle = "rgba(0,0,0,0.7)";
+
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  
+
+ctx.fillStyle = "#66ffcc";
+
+ctx.font = "bold 80px sans-serif";
+
+ctx.textAlign = "center";
+
+  
+
+ctx.fillText(
+
+"VICTORY",
+
+canvas.width/2,
+
+canvas.height/2
+
+);
+
+  
+
+alert("VICTORY");
+
+  
+
+return;
+
+}
+
+  
+
+}
+
+  
+
+function draw(){
+
+  
+
+let shakeX=0,shakeY=0;
+
+  
+
+if(screenShake>0){
+
+shakeX=(Math.random()-0.5)*screenShake;
+
+shakeY=(Math.random()-0.5)*screenShake;
+
+}
+
+  
+
+ctx.save();
+
+ctx.translate(shakeX,shakeY);
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  
+
+if(screenFlash>0){
+
+ctx.fillStyle="rgba(255,255,255,0.35)";
+
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+}
+if(window.soulPhantoms){
+    window.soulPhantoms.forEach(p => p.draw());
+}
+
+if(selectedChapter === 4){
+    if(stage === 1){
+        currentBossImg = chapter4Stage1Img;
+    } else {
+        currentBossImg = chapter4Stage2Img;
+    }
+} 
+else if(stage === 1){
+    if(selectedChapter === 1) currentBossImg = bossImg1;
+    else if(selectedChapter === 2) currentBossImg = bossImg2;
+    else if(selectedChapter === 3) currentBossImg = iceDragonImg;
+    else if(selectedChapter === 5) currentBossImg = chapter5Stage1Img;
+    else if(selectedChapter === 6) currentBossImg = veilithImg;
+    else if(selectedChapter === 7) currentBossImg = hakabaktieImg;
+    else if(selectedChapter === 8) currentBossImg = veilithImg;
+} 
+else {
+    if(selectedChapter === 1) currentBossImg = bossImg3;
+    else if(selectedChapter === 2) currentBossImg = bossImg4;
+    else if(selectedChapter === 3) currentBossImg = cryseliaImg;
+    else if(selectedChapter === 5) currentBossImg = chapter5Stage2Img;
+    else if(selectedChapter === 6) currentBossImg = obsidraxImg;
+    else if(selectedChapter === 7) currentBossImg = zephiraImg;
+    else if(selectedChapter === 8) currentBossImg = thalvornImg;
+}
+
+// Vẽ boss
+if(currentBossImg){
+    ctx.drawImage(
+        currentBossImg,
+        boss.x - 80,
+        boss.y - 80,
+        160,
+        160
+    );
+}
+
+trioBoss.forEach(c=>{
+
+ctx.drawImage(chapter4Stage1Img,c.x-55,c.y-55,110,110);
+
+});
+
+cryselia.forEach(c=>{
+
+ctx.drawImage(cryseliaImg,c.x-55,c.y-55,110,110);
+
+});
+zephira.forEach(c=>{
+
+ctx.drawImage(zephiraImg,c.x-55,c.y-55,110,110);
+
+});
+ossivar.forEach(c=>{
+
+ctx.drawImage(ossivarImg,c.x-55,c.y-55,110,110);
+
+});
+clones.forEach(c=>{
+
+ctx.globalAlpha=0.6;
+
+ctx.drawImage(bossImg2,c.x-55,c.y-55,110,110);
+
+ctx.globalAlpha=1;
+
+});
+
+  
+
+// ===== SERAPHINE CENTER RING =====
+
+if(selectedChar === 4 || currentChar === 4){
+
+  
+
+ctx.save();
+
+  
+
+ctx.strokeStyle = "rgba(0,140,255,0.85)";
+
+ctx.shadowColor = "#00b3ff";
+
+ctx.shadowBlur = 20;
+
+ctx.lineWidth = 4;
+
+  
+
+ctx.beginPath();
+
+ctx.arc(canvas.width/2, canvas.height/2, 70, 0, Math.PI*2);
+
+ctx.stroke();
+
+  
+
+ctx.restore();
+
+}
+
+  
+
+// EFFECT TRÓI FLORENSYA
+
+  
+
+if(
+
+currentChar===1 &&
+
+bossFreeze>0
+
+){
+
+  
+
+ctx.save();
+
+  
+
+ctx.translate(
+
+boss.x,
+
+boss.y
+
+);
+
+  
+
+for(let i=0;i<6;i++){
+
+  
+
+ctx.strokeStyle=
+
+"#44aa44";
+
+  
+
+ctx.lineWidth=6;
+
+  
+
+ctx.shadowColor=
+
+"#66ff66";
+
+  
+
+ctx.shadowBlur=10;
+
+  
+
+ctx.beginPath();
+
+  
+
+for(let t=0;t<Math.PI*2;t+=0.15){
+
+  
+
+let r=
+
+30+i*8+
+
+Math.sin(
+
+t*6+
+
+frame*0.08
+
+)*4;
+
+  
+
+let x=
+
+Math.cos(
+
+t+i
+
+)*r;
+
+  
+
+let y=
+
+Math.sin(
+
+t+i
+
+)*r;
+
+  
+
+if(t===0){
+
+  
+
+ctx.moveTo(x,y);
+
+  
+
+}else{
+
+  
+
+ctx.lineTo(x,y);
+
+}
+
+}
+
+  
+
+ctx.stroke();
+
+}
+
+  
+
+// lá cây
+
+  
+
+for(let i=0;i<10;i++){
+
+  
+
+let ang=
+
+i*Math.PI*2/10+
+
+frame*0.02;
+
+  
+
+let x=
+
+Math.cos(ang)*55;
+
+  
+
+let y=
+
+Math.sin(ang)*55;
+
+  
+
+ctx.fillStyle=
+
+"#88ff88";
+
+  
+
+ctx.beginPath();
+
+  
+
+ctx.ellipse(
+
+x,
+
+y,
+
+8,
+
+4,
+
+ang,
+
+0,
+
+Math.PI*2
+
+);
+
+  
+
+ctx.fill();
+
+}
+
+  
+
+ctx.restore();
+
+}
+
+  
+
+// DARK CONTROL EFFECT
+
+  
+
+if(darkControl > 0){
+
+  
+
+ctx.fillStyle =
+
+"rgba(0,0,0,0.35)";
+
+  
+
+ctx.fillRect(
+
+0,
+
+0,
+
+canvas.width,
+
+canvas.height
+
+);
+
+}
+
+  
+
+// RỒNG CAM CẠNH ASTRAEA
+
+  
+
+if(currentChar === 0){
+
+  
+
+let dragonX = player.x - 55;
+
+let dragonY = player.y - 10;
+
+  
+
+ctx.save();
+
+  
+
+ctx.translate(dragonX, dragonY);
+
+  
+
+// đuôi dài mảnh
+
+ctx.strokeStyle = "#ff8844";
+
+ctx.lineWidth = 6;
+
+ctx.lineCap = "round";
+
+  
+
+ctx.beginPath();
+
+ctx.moveTo(34,0);
+
+ctx.quadraticCurveTo(
+
+60,10,
+
+78,30
+
+);
+
+ctx.stroke();
+
+  
+
+// thân dài
+
+ctx.fillStyle = "#ff6633";
+
+  
+
+ctx.beginPath();
+
+ctx.ellipse(
+
+10,0,
+
+30,10,
+
+0,
+
+0,
+
+Math.PI*2
+
+);
+
+ctx.fill();
+
+  
+
+// cổ
+
+ctx.save();
+
+  
+
+ctx.translate(-12,-2);
+
+ctx.rotate(-0.2);
+
+  
+
+ctx.fillRect(
+
+-12,
+
+-5,
+
+24,
+
+10
+
+);
+
+  
+
+ctx.restore();
+
+  
+
+// đầu nhỏ
+
+ctx.beginPath();
+
+ctx.ellipse(
+
+-28,-4,
+
+14,10,
+
+-0.1,
+
+0,
+
+Math.PI*2
+
+);
+
+ctx.fill();
+
+  
+
+// mõm nhọn
+
+ctx.beginPath();
+
+ctx.moveTo(-38,-7);
+
+ctx.lineTo(-52,-4);
+
+ctx.lineTo(-38,2);
+
+ctx.fill();
+
+  
+
+// cánh trên
+
+ctx.fillStyle = "#ff9955";
+
+  
+
+ctx.beginPath();
+
+ctx.moveTo(0,-4);
+
+ctx.quadraticCurveTo(
+
+-10,-34,
+
+16,-16
+
+);
+
+ctx.lineTo(10,-2);
+
+ctx.fill();
+
+  
+
+// cánh dưới
+
+ctx.beginPath();
+
+ctx.moveTo(4,6);
+
+ctx.quadraticCurveTo(
+
+-4,24,
+
+20,14
+
+);
+
+ctx.lineTo(14,4);
+
+ctx.fill();
+
+  
+
+// sừng
+
+ctx.strokeStyle = "#ffe0aa";
+
+ctx.lineWidth = 3;
+
+  
+
+ctx.beginPath();
+
+ctx.moveTo(-32,-10);
+
+ctx.lineTo(-38,-18);
+
+  
+
+ctx.moveTo(-24,-11);
+
+ctx.lineTo(-26,-20);
+
+  
+
+ctx.stroke();
+
+  
+
+// mắt
+
+ctx.fillStyle = "yellow";
+
+  
+
+ctx.beginPath();
+
+ctx.arc(
+
+-33,-5,
+
+2,
+
+0,
+
+Math.PI*2
+
+);
+
+  
+
+ctx.fill();
+
+  
+
+// glow
+
+ctx.shadowColor = "#ff8844";
+
+ctx.shadowBlur = 18;
+
+  
+
+// lửa ở miệng
+
+ctx.fillStyle = "#ffaa44";
+
+  
+
+ctx.beginPath();
+
+ctx.moveTo(-52,-4);
+
+ctx.lineTo(-66,-8);
+
+ctx.lineTo(-62,-1);
+
+ctx.lineTo(-70,2);
+
+ctx.lineTo(-54,1);
+
+  
+
+ctx.fill();
+
+  
+
+ctx.restore();
+
+}
+
+  
+
+// CÁO CẠNH FLORENSYA
+
+  
+
+if(currentChar === 1){
+
+  
+
+let foxX = player.x - 55;
+
+let foxY = player.y - 5;
+
+  
+
+ctx.save();
+
+  
+
+ctx.translate(foxX, foxY);
+
+  
+
+// đuôi lớn
+
+ctx.fillStyle = "#ff9933";
+
+  
+
+ctx.beginPath();
+
+ctx.ellipse(
+
+28, 8,
+
+24, 14,
+
+0.5,
+
+0,
+
+Math.PI*2
+
+);
+
+ctx.fill();
+
+  
+
+// đuôi phụ
+
+ctx.beginPath();
+
+ctx.ellipse(
+
+18, 18,
+
+18, 10,
+
+0.9,
+
+0,
+
+Math.PI*2
+
+);
+
+ctx.fill();
+
+  
+
+// thân
+
+ctx.fillStyle = "#ff9933";
+
+  
+
+ctx.beginPath();
+
+ctx.ellipse(
+
+0,0,
+
+24,10,
+
+0,
+
+0,
+
+Math.PI*2
+
+);
+
+ctx.fill();
+
+  
+
+// đầu
+
+ctx.beginPath();
+
+ctx.ellipse(
+
+-24,-2,
+
+12,10,
+
+0,
+
+0,
+
+Math.PI*2
+
+);
+
+ctx.fill();
+
+  
+
+// tai trái
+
+ctx.beginPath();
+
+ctx.moveTo(-32,-8);
+
+ctx.lineTo(-38,-20);
+
+ctx.lineTo(-24,-12);
+
+ctx.fill();
+
+  
+
+// tai phải
+
+ctx.beginPath();
+
+ctx.moveTo(-20,-10);
+
+ctx.lineTo(-16,-22);
+
+ctx.lineTo(-10,-10);
+
+ctx.fill();
+
+  
+
+// chân
+
+ctx.fillRect(-8,8,4,10);
+
+ctx.fillRect(6,8,4,10);
+
+  
+
+// mắt
+
+ctx.fillStyle = "#ccffdd";
+
+  
+
+ctx.beginPath();
+
+ctx.arc(
+
+-28,-3,
+
+2,
+
+0,
+
+Math.PI*2
+
+);
+
+  
+
+ctx.arc(
+
+-20,-3,
+
+2,
+
+0,
+
+Math.PI*2
+
+);
+
+  
+
+ctx.fill();
+
+  
+
+// glow thiên nhiên
+
+ctx.fillStyle = "#ffbb66";
+
+ctx.shadowBlur = 18;
+
+  
+
+// lá cây bay quanh
+
+for(let i=0;i<4;i++){
+
+  
+
+let ang =
+
+frame*0.03 +
+
+i*Math.PI/2;
+
+  
+
+let lx =
+
+Math.cos(ang)*26;
+
+  
+
+let ly =
+
+Math.sin(ang)*18;
+
+  
+
+ctx.fillStyle =
+
+"#aaffaa";
+
+  
+
+ctx.beginPath();
+
+  
+
+ctx.ellipse(
+
+lx,
+
+ly,
+
+5,
+
+2.5,
+
+ang,
+
+0,
+
+Math.PI*2
+
+);
+
+  
+
+ctx.fill();
+
+}
+
+  
+
+ctx.restore();
+
+}
+
+  
+
+if(hitFlash > 0){
+
+if(Math.floor(hitFlash / 6) % 2 === 0){
+
+ctx.globalAlpha = 0.3;
+
+}
+
+}
+
+  
+
+ctx.drawImage(
+
+charImgs[currentChar],
+
+player.x-35,
+
+player.y-35,
+
+70,
+
+70
+
+);
+
+  
+
+ctx.globalAlpha = 1;
+
+  
+
+if(elariaClone){
+
+  
+
+ctx.drawImage(
+
+charImgs[currentChar],
+
+elariaClone.x - 35,
+
+elariaClone.y - 35,
+
+70,
+
+70
+
+);
+
+}
+
+  
+
+if(paralyzeTimer > 0){
+
+  
+
+// ===== CHAPTER 3 STAGE 2: KHỐI BĂNG CỐ ĐỊNH =====
+
+if(selectedChapter === 3 && stage === 2){
+
+  
+
+ctx.save();
+
+  
+
+ctx.fillStyle = "rgba(120,220,255,0.22)";
+
+  
+
+ctx.shadowColor = "#99eeff";
+
+ctx.shadowBlur = 25;
+
+  
+
+let size = 100; // CỐ ĐỊNH, KHÔNG DAO ĐỘNG
+
+  
+
+ctx.fillRect(
+
+player.x - size/2,
+
+player.y - size/2,
+
+size,
+
+size
+
+);
+
+  
+
+ctx.restore();
+
+}
+
+  
+
+// ===== PARALYZE THƯỜNG: XANH LÁ =====
+
+else{
+
+  
+
+ctx.strokeStyle = "#44ff66";
+
+ctx.lineWidth = 4;
+
+ctx.shadowColor = "#66ff88";
+
+ctx.shadowBlur = 15;
+
+  
+
+for(let i = 0; i < 6; i++){
+
+  
+
+ctx.beginPath();
+
+  
+
+ctx.moveTo(
+
+player.x + (Math.random() - 0.5) * 40,
+
+player.y + (Math.random() - 0.5) * 40
+
+);
+
+  
+
+ctx.lineTo(
+
+player.x + (Math.random() - 0.5) * 40,
+
+player.y + (Math.random() - 0.5) * 40
+
+);
+
+  
+
+ctx.stroke();
+
+}
+
+  
+
+ctx.shadowBlur = 0;
+
+}
+
+}
+
+  
+
+rainbowLaser.forEach(l=>l.draw());
+
+enemyBullets.forEach(b=>b.draw());
+
+playerBullets.forEach(b=>b.draw());
+
+dragonFire.forEach(b=>b.draw());
+
+  
+
+dataBits.forEach(b=>{
+
+  
+
+ctx.fillStyle =
+
+"#00ff66";
+
+  
+
+ctx.font =
+
+"bold 22px monospace";
+
+  
+
+ctx.shadowColor =
+
+"#00ff66";
+
+  
+
+ctx.shadowBlur = 12;
+
+  
+
+ctx.fillText(
+
+b.txt,
+
+b.x,
+
+b.y
+
+);
+
+  
+
+ctx.shadowBlur = 0;
+
+});
+
+  
+
+ctx.restore();
+
+}
+
+  
+
+function loop(){
+
+if(gameOver) return;
+
+draw();
+
+update();
+
+requestAnimationFrame(loop);
+
+}
+
+  
+
+</script>
+
+</body>
+
+</html>
